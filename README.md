@@ -227,6 +227,31 @@ After scraping → Admin → select the new file → **Train**.
 
 ---
 
+## Enrich Training Data (CLI)
+
+Scraped JSON often has long questions like `Thông tin về ... – ...` and long answers. Use `tools.enrich_dataref` to add shorter question variants with the same meaning, plus small-talk entries (e.g. `xin chào`, `cảm ơn`).
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m tools.enrich_dataref src/DataRef/minhlongmoto-com.json --dry-run
+python -m tools.enrich_dataref src/DataRef/minhlongmoto-com.json
+```
+
+| What it does | Detail |
+|--------------|--------|
+| Short question variants | e.g. `Thông tin về Minh Long Motor`, `Giá Dat Bike Quantum S2` |
+| Small-talk | `xin chào`, `xin chao`, `hello`, `chào shop`, `cảm ơn` |
+| FAQ snippets | Short answers for common intents |
+| Cleanup | Removes corrupted scrape entries (binary/image garbage) |
+
+`--dry-run` prints stats only (entry count before/after). Without it, the file is overwritten in place.
+
+After enriching → **Admin → Train** again with the updated file.
+
+> Tip: TF-IDF matches better when questions are short and natural. For best results, also keep each `answer` concise (1–3 sentences) when editing manually.
+
+---
+
 ## Troubleshooting
 
 ### `WinError 10013` on port 8000
@@ -251,6 +276,12 @@ Open http://localhost:8080
 ### Chatbot says the system is not trained
 
 → Admin → select JSON file(s) → **Train**.
+
+### Chatbot replies "no information" but data exists
+
+→ Train the correct file (e.g. `minhlongmoto-com.json`, not only `sample-minhlong.json`).  
+→ Re-train after enriching data with `tools.enrich_dataref`.  
+→ Ask with natural short phrases (e.g. `Thông tin về Minh Long Motor`, `xin chào`).
 
 ### `pip` or `uvicorn` not found
 
@@ -294,7 +325,7 @@ motorcycle-advisor-chatbot/
 ├── src/
 │   ├── backend/          # FastAPI + TF-IDF engine
 │   ├── frontend/         # Web UI
-│   ├── tools/            # CLI url → JSON
+│   ├── tools/            # CLI: url → JSON, enrich DataRef
 │   ├── DataRef/          # Training data (JSON)
 │   ├── data/model/       # Trained model (*.joblib)
 │   ├── .env.example      # Config template
@@ -335,10 +366,11 @@ Details: `Report/NHOM12_PHATTRIENHETHONGTHONGMINH.md`
 **Local development:**
 
 ```text
-1. PYTHONPATH=src  python -m tools.url_to_json <URL>  →  src/DataRef/*.json
-2. .\run.ps1                                         →  start server
-3. Admin → Train                                     →  build model
-4. Homepage → chat                                   →  verify results
+1. PYTHONPATH=src  python -m tools.url_to_json <URL>     →  src/DataRef/*.json
+2. PYTHONPATH=src  python -m tools.enrich_dataref <file> →  short question variants (optional)
+3. .\run.ps1                                            →  start server
+4. Admin → Train                                        →  build model
+5. Homepage → chat                                      →  verify results
 ```
 
 **Docker:**
