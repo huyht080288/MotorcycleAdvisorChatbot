@@ -434,7 +434,7 @@ code {
 <p>Điểm khác biệt của dự án:</p>
 <ul>
 <li>AI <strong>tự triển khai</strong>, có thể giải thích từng bước train và inference.</li>
-<li>Dữ liệu train lưu tại <code>DataRef/*.json</code>, admin chọn nhiều file để train lại model.</li>
+<li>Dữ liệu train lưu tại <code>src/DataRef/*.json</code>, admin chọn nhiều file để train lại model.</li>
 <li>Công cụ CLI riêng chuyển URL website thành file JSON chuẩn hóa.</li>
 <li>Giao diện web mô phỏng website cửa hàng xe máy kèm widget chat cố định.</li>
 </ul>
@@ -471,7 +471,7 @@ code {
 <p><strong>Trong phạm vi:</strong></p>
 <ul>
 <li>Chat khách tiếng Việt qua giao diện web.</li>
-<li>Train AI từ một hoặc nhiều file <code>DataRef/*.json</code>.</li>
+<li>Train AI từ một hoặc nhiều file <code>src/DataRef/*.json</code>.</li>
 <li>Công cụ CLI scrape URL → JSON.</li>
 <li>Trang admin: đăng nhập, chọn file, train model.</li>
 <li>Hiển thị nội dung cửa hàng (xe nổi bật, khuyến mãi, dịch vụ, chi nhánh) từ dữ liệu JSON.</li>
@@ -500,7 +500,7 @@ code {
 <td><strong>Văn Trần Hữu Hoàng</strong></td>
 <td>K23DTCN124</td>
 <td>Trưởng nhóm, Backend &amp; AI</td>
-<td>Thiết kế kiến trúc; triển khai <code>backend/ai/</code> (TF-IDF, cosine); API <code>/api/chat</code>, <code>/api/admin/train</code>; tích hợp FastAPI</td>
+<td>Thiết kế kiến trúc; triển khai <code>src/backend/ai/</code> (TF-IDF, cosine); API <code>/api/chat</code>, <code>/api/admin/train</code>; tích hợp FastAPI</td>
 <td>Module AI hoạt động, API ổn định</td>
 </tr>
 <tr>
@@ -514,14 +514,14 @@ code {
 <td><strong>Lương Hồng Hưng</strong></td>
 <td>K25DTCN324</td>
 <td>Dữ liệu &amp; Kiểm thử</td>
-<td>Chạy <code>tools/url_to_json</code> scrape minhlongmoto.com; kiểm tra <code>DataRef/*.json</code>; test train/chat; biên soạn báo cáo</td>
+<td>Chạy <code>src/tools/url_to_json</code> scrape minhlongmoto.com; kiểm tra <code>src/DataRef/*.json</code>; test train/chat; biên soạn báo cáo</td>
 <td>File <code>minhlongmoto-com.json</code> (108 entries), tài liệu dự án</td>
 </tr>
 </tbody>
 </table>
 <h3 id="32-quy-trình-làm-việc-nhóm">3.2. Quy trình làm việc nhóm</h3>
 <pre><code class="language-mermaid"><div class="mermaid">flowchart LR
-    A[Lương Hồng Hưng<br/>Thu thập dữ liệu] --> B[DataRef/*.json]
+    A[Lương Hồng Hưng<br/>Thu thập dữ liệu] --> B[src/DataRef/*.json]
     B --> C[Văn Trần Hữu Hoàng<br/>Train AI + API]
     C --> D[Hồ Tiến Huy<br/>Giao diện + Chat]
     D --> E[Kiểm thử chung]
@@ -546,12 +546,12 @@ code {
     end
 
     subgraph Data["Dữ liệu"]
-        JSON[DataRef/*.json]
-        Model[data/model/*.joblib]
+        JSON[src/DataRef/*.json]
+        Model[src/data/model/*.joblib]
     end
 
     subgraph Tools["Công cụ CLI"]
-        Scraper[tools/url_to_json.py]
+        Scraper[src/tools/url_to_json.py]
     end
 
     URL[minhlongmoto.com] --> Scraper
@@ -570,33 +570,22 @@ code {
 </div></code></pre>
 <h3 id="42-cấu-trúc-thư-mục-dự-án">4.2. Cấu trúc thư mục dự án</h3>
 <pre class="hljs"><code><div>motorcycle-advisor-chatbot/
-├── DataRef/                 # Dữ liệu train (JSON)
-│   ├── minhlongmoto-com.json
-│   └── sample-minhlong.json
-├── tools/                   # CLI: URL → JSON
-│   └── url_to_json.py
-├── backend/
-│   ├── main.py              # FastAPI entry point
-│   ├── api/
-│   │   ├── chat.py          # API chat khách
-│   │   ├── admin.py         # Login, train
-│   │   └── site.py          # Nội dung trang chủ
-│   ├── ai/
-│   │   ├── preprocessor.py  # Tiền xử lý văn bản
-│   │   └── vectorizer.py    # TF-IDF + inference
-│   └── ingest/
-│       └── json_loader.py   # Đọc &amp; gộp JSON
-├── frontend/
-│   ├── index.html           # Trang chủ + chat widget
-│   ├── admin.html           # Trang quản trị
-│   ├── css/style.css
-│   └── js/
-│       ├── site.js
-│       ├── chat.js
-│       └── admin.js
-├── data/model/              # Model sau khi train
-├── Report/                  # Báo cáo đồ án
-└── requirements.txt
+├── src/                     # Toàn bộ source + config ứng dụng
+│   ├── backend/
+│   │   ├── main.py
+│   │   ├── paths.py
+│   │   ├── api/
+│   │   ├── ai/
+│   │   └── ingest/
+│   ├── frontend/
+│   ├── tools/
+│   ├── DataRef/             # Dữ liệu train (JSON)
+│   ├── data/model/          # Model sau khi train
+│   ├── .env.example
+│   └── requirements.txt
+├── Report/
+├── run.ps1 / run.bat
+└── .venv/
 </div></code></pre>
 <h3 id="43-mô-hình-triển-khai-deployment">4.3. Mô hình triển khai (Deployment)</h3>
 <pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
@@ -663,12 +652,6 @@ code {
 <td>JWT token cho admin</td>
 </tr>
 <tr>
-<td><strong>Cấu hình</strong></td>
-<td>python-dotenv</td>
-<td>≥ 1.0</td>
-<td>Biến môi trường <code>.env</code></td>
-</tr>
-<tr>
 <td><strong>Scrape web</strong></td>
 <td>requests, BeautifulSoup4, lxml</td>
 <td>—</td>
@@ -684,7 +667,13 @@ code {
 <td><strong>Định dạng dữ liệu</strong></td>
 <td>JSON</td>
 <td>—</td>
-<td>Knowledge base <code>DataRef/</code></td>
+<td>Knowledge base <code>src/DataRef/</code></td>
+</tr>
+<tr>
+<td><strong>Cấu hình</strong></td>
+<td>python-dotenv</td>
+<td>≥ 1.0</td>
+<td>Biến môi trường <code>src/.env</code></td>
 </tr>
 <tr>
 <td><strong>Version control</strong></td>
@@ -711,7 +700,7 @@ code {
 </tr>
 <tr>
 <td><strong>Singleton</strong></td>
-<td><code>backend/ai/vectorizer.py</code></td>
+<td><code>src/backend/ai/vectorizer.py</code></td>
 <td>Biến <code>model = ChatbotModel()</code> dùng chung toàn app</td>
 </tr>
 <tr>
@@ -721,7 +710,7 @@ code {
 </tr>
 <tr>
 <td><strong>RESTful API</strong></td>
-<td><code>backend/api/</code></td>
+<td><code>src/backend/api/</code></td>
 <td>Endpoint theo tài nguyên: <code>/chat</code>, <code>/admin/train</code>, <code>/site-content</code></td>
 </tr>
 <tr>
@@ -731,12 +720,12 @@ code {
 </tr>
 <tr>
 <td><strong>Environment-based config</strong></td>
-<td><code>.env</code></td>
+<td><code>src/.env</code></td>
 <td>Mật khẩu admin, secret key, ngưỡng confidence</td>
 </tr>
 <tr>
 <td><strong>Separation of Concerns</strong></td>
-<td><code>tools/</code> vs <code>backend/</code></td>
+<td><code>src/tools/</code> vs <code>src/backend/</code></td>
 <td>Công cụ scrape tách biệt khỏi ứng dụng web</td>
 </tr>
 </tbody>
@@ -798,43 +787,124 @@ code {
 </table>
 <hr>
 <h2 id="6-thuật-toán-ai">6. Thuật toán AI</h2>
-<blockquote>
-<p><strong>Đây là phần trọng tâm của đồ án (3 điểm).</strong> Nhóm sử dụng chatbot dạng <strong>truy xuất thông tin (Retrieval-Based)</strong>, không sinh văn bản tự do như LLM.</p>
-</blockquote>
-<h3 id="61-tổng-quan-thuật-toán">6.1. Tổng quan thuật toán</h3>
+<p>Nhóm sử dụng chatbot dạng <strong>truy xuất thông tin (Retrieval-Based Chatbot)</strong>, không sinh văn bản tự do như LLM. Hệ thống tìm câu trả lời phù hợp nhất từ kho tri thức đã được chuẩn bị trước, thay vì tạo nội dung mới từ đầu.</p>
+<h3 id="61-giới-thiệu-về-thuật-toán">6.1. Giới thiệu về thuật toán</h3>
+<h4 id="611-bài-toán-cần-giải-quyết">6.1.1. Bài toán cần giải quyết</h4>
+<p>Khách hàng đặt câu hỏi bằng ngôn ngữ tự nhiên (tiếng Việt) về xe máy, giá cả, khuyến mãi hoặc dịch vụ. Hệ thống cần:</p>
+<ol>
+<li><strong>Hiểu</strong> câu hỏi ở mức từ khóa và ngữ cảnh từ vựng.</li>
+<li><strong>Tìm</strong> thông tin liên quan nhất trong knowledge base.</li>
+<li><strong>Trả lời</strong> bằng nội dung đã có sẵn, kèm mức độ tin cậy.</li>
+</ol>
+<h4 id="612-hướng-tiếp-cận-retrieval-based-chatbot">6.1.2. Hướng tiếp cận: Retrieval-Based Chatbot</h4>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    A[Dữ liệu train<br/>src/DataRef JSON] --> B[Vector hóa TF-IDF]
+    B --> C[Ma trận knowledge]
+    D[Câu hỏi khách] --> E[Tiền xử lý]
+    E --> F[Vector hóa câu hỏi]
+    F --> G[Cosine Similarity]
+    C --> G
+    G --> H[Câu trả lời khớp nhất]
+</div></code></pre>
+<p><strong>Retrieval-Based Chatbot</strong> (chatbot dựa trên truy xuất) hoạt động theo nguyên tắc: mỗi câu hỏi được ánh xạ tới <strong>một mục</strong> (entry) trong cơ sở tri thức có nội dung gần giống nhất. Đây là phương pháp cổ điển trong <strong>Information Retrieval (IR)</strong> — lĩnh vực tìm kiếm và xếp hạng tài liệu theo mức độ liên quan.</p>
+<p>So với chatbot sinh văn bản (generative AI như ChatGPT):</p>
 <table>
 <thead>
 <tr>
-<th>Thuật toán</th>
-<th>Thư viện / File</th>
+<th>Đặc điểm</th>
+<th>Retrieval-Based (nhóm triển khai)</th>
+<th>Generative LLM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nguồn câu trả lời</td>
+<td>Chỉ từ dữ liệu đã train</td>
+<td>Sinh mới từ mô hình ngôn ngữ</td>
+</tr>
+<tr>
+<td>Khả năng giải thích</td>
+<td>Rõ ràng — biết entry nào được chọn</td>
+<td>Khó kiểm chứng</td>
+</tr>
+<tr>
+<td>Yêu cầu đồ án</td>
+<td><strong>Phù hợp</strong> — tự triển khai, có công thức</td>
+<td>Không được dùng</td>
+</tr>
+</tbody>
+</table>
+<h4 id="613-lý-do-chọn-tf-idf-và-cosine-similarity">6.1.3. Lý do chọn TF-IDF và Cosine Similarity</h4>
+<ul>
+<li><strong>TF-IDF</strong>: Biểu diễn văn bản dưới dạng vector số, nhấn mạnh từ khóa đặc trưng (tên xe, giá, địa điểm) và giảm trọng số từ phổ biến (<em>xe</em>, <em>máy</em>).</li>
+<li><strong>Cosine Similarity</strong>: Đo độ giống nhau giữa vector câu hỏi và vector từng entry; phù hợp khi so sánh tài liệu có độ dài khác nhau.</li>
+<li><strong>Ưu điểm cho đồ án sinh viên</strong>: Triển khai nhanh bằng scikit-learn, không cần GPU, dễ vẽ sơ đồ và minh họa từng bước.</li>
+</ul>
+<p><strong>Lưu ý:</strong> Nhóm <strong>không</strong> sử dụng ChatGPT, Gemini hay bất kỳ API LLM nào trong luồng <code>/api/chat</code>. Việc scrape website (<code>src/tools/</code>) có thể dùng công cụ hỗ trợ bên ngoài, nhưng <strong>inference hoàn toàn bằng TF-IDF</strong>.</p>
+<h3 id="62-thuật-toán-sử-dụng-và-vị-trí-áp-dụng-trong-mã-nguồn">6.2. Thuật toán sử dụng và vị trí áp dụng trong mã nguồn</h3>
+<table>
+<thead>
+<tr>
+<th>Thuật toán / Kỹ thuật</th>
+<th>Thư viện</th>
+<th>File áp dụng</th>
+<th>Giai đoạn</th>
 <th>Mục đích</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>TF-IDF</strong></td>
-<td><code>sklearn.TfidfVectorizer</code> — <code>vectorizer.py</code></td>
-<td>Chuyển văn bản thành vector số, đo mức quan trọng từ khóa</td>
+<td><code>sklearn.TfidfVectorizer</code></td>
+<td><code>src/backend/ai/vectorizer.py</code></td>
+<td>Train + Inference</td>
+<td>Chuyển văn bản thành vector số</td>
 </tr>
 <tr>
 <td><strong>Cosine Similarity</strong></td>
-<td><code>sklearn.metrics.pairwise</code> — <code>vectorizer.py</code></td>
-<td>So sánh độ tương đồng giữa câu hỏi và từng mục knowledge</td>
+<td><code>sklearn.metrics.pairwise</code></td>
+<td><code>src/backend/ai/vectorizer.py</code></td>
+<td>Inference</td>
+<td>So khớp câu hỏi với knowledge base</td>
 </tr>
 <tr>
 <td><strong>Text Preprocessing</strong></td>
-<td><code>preprocessor.py</code></td>
+<td><code>re</code>, <code>unicodedata</code></td>
+<td><code>src/backend/ai/preprocessor.py</code></td>
+<td>Inference</td>
 <td>Chuẩn hóa câu hỏi trước khi vector hóa</td>
 </tr>
 <tr>
-<td><strong>Threshold Classification</strong></td>
-<td><code>vectorizer.py</code></td>
-<td>Lọc câu trả lời khi độ tin cậy thấp</td>
+<td><strong>Ngưỡng tin cậy</strong></td>
+<td>Logic tùy chỉnh</td>
+<td><code>src/backend/ai/vectorizer.py</code></td>
+<td>Inference</td>
+<td>Lọc câu trả lời khi điểm similarity thấp</td>
+</tr>
+<tr>
+<td><strong>Gộp dữ liệu JSON</strong></td>
+<td>—</td>
+<td><code>src/backend/ingest/json_loader.py</code></td>
+<td>Train</td>
+<td>Đọc và merge nhiều file <code>DataRef/</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Lưu ý:</strong> Nhóm <strong>không</strong> sử dụng ChatGPT, Gemini hay bất kỳ API LLM nào trong luồng <code>/api/chat</code>. Việc scrape website (<code>tools/</code>) có thể dùng công cụ hỗ trợ bên ngoài, nhưng <strong>inference hoàn toàn bằng TF-IDF</strong>.</p>
-<h3 id="62-lý-thuyết-tf-idf">6.2. Lý thuyết TF-IDF</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TB
+    subgraph Train["Giai đoạn Train"]
+        J[json_loader.py] --> V[vectorizer.py<br/>fit_transform]
+    end
+
+    subgraph Inference["Giai đoạn Inference"]
+        P[preprocessor.py] --> V2[vectorizer.py<br/>transform + cosine]
+    end
+
+    subgraph API["API Layer"]
+        C[chat.py] --> V2
+        A[admin.py] --> J
+    end
+</div></code></pre>
+<h3 id="63-lý-thuyết-tf-idf">6.3. Lý thuyết TF-IDF</h3>
 <p><strong>TF (Term Frequency)</strong> — tần suất xuất hiện của từ <code>t</code> trong tài liệu <code>d</code>:</p>
 <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>T</mi><mi>F</mi><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mrow><mtext>s</mtext><mover accent="true"><mover accent="true"><mtext>o</mtext><mo>ˆ</mo></mover><mo>ˊ</mo></mover><mtext> l</mtext><mover accent="true"><mover accent="true"><mtext>a</mtext><mo>ˆ</mo></mover><mo>ˋ</mo></mover><mtext>n t xu</mtext><mover accent="true"><mover accent="true"><mtext>a</mtext><mo>ˆ</mo></mover><mo>ˊ</mo></mover><mtext>t hiện trong </mtext></mrow><mi>d</mi></mrow><mrow><mrow><mtext>tổng s</mtext><mover accent="true"><mover accent="true"><mtext>o</mtext><mo>ˆ</mo></mover><mo>ˊ</mo></mover><mtext> từ trong </mtext></mrow><mi>d</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">TF(t, d) = \frac{\text{số lần t xuất hiện trong } d}{\text{tổng số từ trong } d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.6772em;vertical-align:-1.0423em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6349em;"><span style="top:-2.1521em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">tổng s</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord">o</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˆ</span></span></span></span></span></span></span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˊ</span></span></span></span></span></span></span><span class="mord"> từ trong </span></span><span class="mord mathnormal">d</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">s</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord">o</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˆ</span></span></span></span></span></span></span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˊ</span></span></span></span></span></span></span><span class="mord"> l</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord">a</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˆ</span></span></span></span></span></span></span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˋ</span></span></span></span></span></span></span><span class="mord">n t xu</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord">a</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˆ</span></span></span></span></span></span></span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˊ</span></span></span></span></span></span></span><span class="mord">t hiện trong </span></span><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.0423em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><p><strong>IDF (Inverse Document Frequency)</strong> — độ hiếm của từ trong toàn bộ corpus:</p>
 <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>I</mi><mi>D</mi><mi>F</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>log</mi><mo>⁡</mo><mfrac><mi>N</mi><mrow><mn>1</mn><mo>+</mo><mi>D</mi><mi>F</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">IDF(t) = \log \frac{N}{1 + DF(t)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2963em;vertical-align:-0.936em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><p>Trong đó <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span> là tổng số tài liệu, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mi>F</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">DF(t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> là số tài liệu chứa từ <code>t</code>.</p>
@@ -851,7 +921,7 @@ code {
     min_df=<span class="hljs-number">1</span>,             <span class="hljs-comment"># Từ phải xuất hiện ít nhất 1 lần</span>
 )
 </div></code></pre>
-<h3 id="63-lý-thuyết-cosine-similarity">6.3. Lý thuyết Cosine Similarity</h3>
+<h3 id="64-lý-thuyết-cosine-similarity">6.4. Lý thuyết Cosine Similarity</h3>
 <p>Sau khi vector hóa, mỗi câu hỏi và mỗi mục knowledge là một vector trong không gian nhiều chiều. <strong>Cosine Similarity</strong> đo cosin của góc giữa hai vector:</p>
 <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mover accent="true"><mi>A</mi><mo>⃗</mo></mover><mo>⋅</mo><mover accent="true"><mi>B</mi><mo>⃗</mo></mover></mrow><mrow><mi mathvariant="normal">∥</mi><mover accent="true"><mi>A</mi><mo>⃗</mo></mover><mi mathvariant="normal">∥</mi><mo>×</mo><mi mathvariant="normal">∥</mi><mover accent="true"><mi>B</mi><mo>⃗</mo></mover><mi mathvariant="normal">∥</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\cos(\theta) = \frac{\vec{A} \cdot \vec{B}}{\|\vec{A}\| \times \|\vec{B}\|}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">cos</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.7497em;vertical-align:-1.1063em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6433em;"><span style="top:-2.1437em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">∥</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9663em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">A</span></span><span style="top:-3.2523em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.0966em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.471em" height="0.714em" style="width:0.471em" viewBox="0 0 471 714" preserveAspectRatio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
 3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
@@ -882,10 +952,10 @@ c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></spa
 <li>Giá trị gần <strong>0</strong> → không liên quan.</li>
 </ul>
 <p>Nhóm chọn mục có <strong>điểm cosine cao nhất</strong> (<code>argmax</code>) làm câu trả lời.</p>
-<h3 id="64-cách-train-ai">6.4. Cách train AI</h3>
-<h4 id="641-sơ-đồ-quy-trình-train">6.4.1. Sơ đồ quy trình train</h4>
+<h3 id="65-cách-train-ai">6.5. Cách train AI</h3>
+<h4 id="651-sơ-đồ-quy-trình-train">6.5.1. Sơ đồ quy trình train</h4>
 <pre><code class="language-mermaid"><div class="mermaid">flowchart TD
-    A[Admin đăng nhập] --> B[Chọn nhiều file DataRef/*.json]
+    A[Admin đăng nhập] --> B[Chọn nhiều file src/DataRef/*.json]
     B --> C[POST /api/admin/train]
     C --> D[json_loader: gộp entries]
     D --> E[Tạo document = question + answer]
@@ -895,8 +965,8 @@ c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></spa
     H --> I[Lưu matrix.joblib]
     I --> J[Model sẵn sàng cho chat]
 </div></code></pre>
-<h4 id="642-các-bước-chi-tiết">6.4.2. Các bước chi tiết</h4>
-<p><strong>Bước 1 — Nạp dữ liệu:</strong> Admin chọn một hoặc nhiều file JSON trong <code>DataRef/</code>. Hàm <code>load_multiple_files()</code> gộp tất cả <code>entries</code>, xử lý trùng <code>id</code>.</p>
+<h4 id="652-các-bước-chi-tiết">6.5.2. Các bước chi tiết</h4>
+<p><strong>Bước 1 — Nạp dữ liệu:</strong> Admin chọn một hoặc nhiều file JSON trong <code>src/DataRef/</code>. Hàm <code>load_multiple_files()</code> gộp tất cả <code>entries</code>, xử lý trùng <code>id</code>.</p>
 <p><strong>Bước 2 — Tạo document:</strong> Mỗi entry được ghép:</p>
 <pre class="hljs"><code><div>document = question + &quot; &quot; + answer
 </div></code></pre>
@@ -926,15 +996,15 @@ c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></spa
 </tbody>
 </table>
 <p><strong>Bước 5 — Khởi động lại:</strong> Khi server start, <code>model.load()</code> tự nạp model nếu đã train trước đó.</p>
-<h4 id="643-dữ-liệu-train-thực-tế">6.4.3. Dữ liệu train thực tế</h4>
+<h4 id="653-dữ-liệu-train-thực-tế">6.5.3. Dữ liệu train thực tế</h4>
 <ul>
-<li>File chính: <code>DataRef/minhlongmoto-com.json</code></li>
+<li>File chính: <code>src/DataRef/minhlongmoto-com.json</code></li>
 <li>Nguồn scrape: https://minhlongmoto.com/</li>
 <li>Số entry: <strong>108</strong> cặp question–answer</li>
 <li>Nội dung: giá xe, khuyến mãi, xe điện, dịch vụ, địa chỉ, FAQ…</li>
 </ul>
-<h3 id="65-cách-ai-phân-tích-và-trả-lời-câu-hỏi">6.5. Cách AI phân tích và trả lời câu hỏi</h3>
-<h4 id="651-sơ-đồ-luồng-inference">6.5.1. Sơ đồ luồng inference</h4>
+<h3 id="66-cách-ai-phân-tích-và-trả-lời-câu-hỏi">6.6. Cách AI phân tích và trả lời câu hỏi</h3>
+<h4 id="661-sơ-đồ-luồng-inference">6.6.1. Sơ đồ luồng inference</h4>
 <pre><code class="language-mermaid"><div class="mermaid">flowchart TD
     Q[Câu hỏi khách hàng] --> P[preprocess<br/>lowercase, chuẩn hóa Unicode]
     P --> V[vectorizer.transform]
@@ -946,7 +1016,7 @@ c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></spa
     A --> R[Response: reply, confidence, matched_question]
     F --> R
 </div></code></pre>
-<h4 id="652-tiền-xử-lý-preprocessorpy">6.5.2. Tiền xử lý (<code>preprocessor.py</code>)</h4>
+<h4 id="662-tiền-xử-lý-preprocessorpy">6.6.2. Tiền xử lý (<code>preprocessor.py</code>)</h4>
 <pre class="hljs"><code><div><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">text: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:
     text = text.strip().lower()
     text = unicodedata.normalize(<span class="hljs-string">&quot;NFC&quot;</span>, text)  <span class="hljs-comment"># Chuẩn hóa tiếng Việt</span>
@@ -954,19 +1024,19 @@ c-16-25.333-24-45-24-59z"/></svg></span></span></span></span></span></span></spa
     <span class="hljs-keyword">return</span> text
 </div></code></pre>
 <p><strong>Mục đích:</strong> Giảm sai lệch do viết hoa/thường, khoảng trắng thừa.</p>
-<h4 id="653-vector-hóa--so-khớp-vectorizerpy">6.5.3. Vector hóa &amp; so khớp (<code>vectorizer.py</code>)</h4>
+<h4 id="663-vector-hóa--so-khớp-vectorizerpy">6.6.3. Vector hóa &amp; so khớp (<code>vectorizer.py</code>)</h4>
 <pre class="hljs"><code><div>query_vec = <span class="hljs-variable language_">self</span>.vectorizer.transform([query])
 scores = cosine_similarity(query_vec, <span class="hljs-variable language_">self</span>.matrix).flatten()
 best_idx = <span class="hljs-built_in">int</span>(scores.argmax())
 best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 </div></code></pre>
-<h4 id="654-ngưỡng-tin-cậy-confidence-threshold">6.5.4. Ngưỡng tin cậy (Confidence Threshold)</h4>
+<h4 id="664-ngưỡng-tin-cậy-confidence-threshold">6.6.4. Ngưỡng tin cậy (Confidence Threshold)</h4>
 <ul>
-<li>Mặc định: <strong>0.25</strong> (cấu hình qua <code>.env</code>: <code>CONFIDENCE_THRESHOLD</code>)</li>
+<li>Mặc định: <strong>0.25</strong> (cấu hình qua <code>src/.env</code>: <code>CONFIDENCE_THRESHOLD</code>)</li>
 <li>Nếu <code>best_score &lt; threshold</code> → bot trả lời: <em>&quot;Xin lỗi, em chưa có thông tin cho câu hỏi này...&quot;</em></li>
-<li>Frontend hiển thị <code>%</code> độ tin cậy để minh họa cho giảng viên / người dùng.</li>
+<li>Frontend hiển thị <code>%</code> độ tin cậy để người dùng đánh giá mức phù hợp của câu trả lời.</li>
 </ul>
-<h4 id="655-ví-dụ-minh-họa">6.5.5. Ví dụ minh họa</h4>
+<h4 id="665-ví-dụ-minh-họa">6.6.5. Ví dụ minh họa</h4>
 <table>
 <thead>
 <tr>
@@ -993,7 +1063,7 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 </tr>
 </tbody>
 </table>
-<h3 id="66-so-sánh-với-các-hướng-tiếp-cận-khác">6.6. So sánh với các hướng tiếp cận khác</h3>
+<h3 id="67-so-sánh-với-các-hướng-tiếp-cận-khác">6.7. So sánh với các hướng tiếp cận khác</h3>
 <table>
 <thead>
 <tr>
@@ -1030,7 +1100,7 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 </tr>
 </tbody>
 </table>
-<h3 id="67-sơ-đồ-kiến-trúc-module-ai">6.7. Sơ đồ kiến trúc module AI</h3>
+<h3 id="68-sơ-đồ-kiến-trúc-module-ai">6.8. Sơ đồ kiến trúc module AI</h3>
 <pre><code class="language-mermaid"><div class="mermaid">classDiagram
     class ChatbotModel {
         +vectorizer: TfidfVectorizer
@@ -1075,7 +1145,7 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 </div></code></pre>
 <h3 id="72-công-cụ-cli-scrape">7.2. Công cụ CLI scrape</h3>
 <pre class="hljs"><code><div>python -m tools.url_to_json https://minhlongmoto.com/ \
-  --output DataRef/minhlongmoto-com.json \
+  --output src/DataRef/minhlongmoto-com.json \
   --max-pages 30
 </div></code></pre>
 <p><strong>Quy trình scrape:</strong></p>
@@ -1086,14 +1156,15 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
     D --> E[Tạo question/answer]
     E --> F[Thu thập link cùng domain]
     F --> B
-    D --> G[Ghi DataRef/*.json]
+    D --> G[Ghi src/DataRef/*.json]
 </div></code></pre>
-<h3 id="73-tiêu-chí-tự-đánh-giá-tiêu-chí-khác-1">7.3. Tiêu chí tự đánh giá (Tiêu chí khác #1)</h3>
-<p><strong>Quản lý chất lượng dữ liệu:</strong></p>
+<h3 id="73-quản-lý-chất-lượng-dữ-liệu">7.3. Quản lý chất lượng dữ liệu</h3>
+<p><strong>Quy trình đảm bảo dữ liệu train:</strong></p>
 <ul>
 <li>Loại bỏ entry thiếu <code>question</code> hoặc <code>answer</code>.</li>
 <li>Gán <code>id</code> unique; xử lý trùng khi gộp nhiều file.</li>
 <li>Dữ liệu có thể chỉnh sửa thủ công trước khi train.</li>
+<li>Kiểm tra mẫu ngẫu nhiên sau khi scrape để đảm bảo nội dung không lẫn menu/breadcrumb website.</li>
 </ul>
 <hr>
 <h2 id="8-chức-năng-hệ-thống">8. Chức năng hệ thống</h2>
@@ -1152,7 +1223,7 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 <tr>
 <td>2</td>
 <td>Liệt kê file JSON</td>
-<td>Hiển thị tất cả file trong <code>DataRef/</code></td>
+<td>Hiển thị tất cả file trong <code>src/DataRef/</code></td>
 </tr>
 <tr>
 <td>3</td>
@@ -1245,19 +1316,17 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 <li>Danh sách checkbox chọn file JSON.</li>
 <li>Nút <strong>Train</strong> + thông báo kết quả (số entry, file đã dùng).</li>
 </ul>
-<h3 id="95-minh-họa-giao-diện-mô-tả-để-chụp-màn-hình-đính-kèm">9.5. Minh họa giao diện (mô tả để chụp màn hình đính kèm)</h3>
-<blockquote>
-<p><strong>Gợi ý khi nộp bản in:</strong> Chèn ảnh chụp màn hình vào các vị trí sau:</p>
+<h3 id="95-hình-ảnh-minh-họa-giao-diện">9.5. Hình ảnh minh họa giao diện</h3>
+<p>Báo cáo kèm các hình chụp màn hình sau (chèn khi in bản cứng hoặc nộp file PDF):</p>
 <ul>
-<li>Hình 1: Trang chủ — phần Hero và xe nổi bật</li>
-<li>Hình 2: Widget chat đang mở với câu trả lời và % tin cậy</li>
-<li>Hình 3: Trang Admin — màn hình Train</li>
-<li>Hình 4: Kết quả chat hỏi về giá xe / địa chỉ</li>
+<li><strong>Hình 1:</strong> Trang chủ — phần Hero và xe nổi bật</li>
+<li><strong>Hình 2:</strong> Widget chat đang mở với câu trả lời và % tin cậy</li>
+<li><strong>Hình 3:</strong> Trang Admin — màn hình Train</li>
+<li><strong>Hình 4:</strong> Kết quả chat hỏi về giá xe / địa chỉ cửa hàng</li>
 </ul>
-</blockquote>
 <hr>
 <h2 id="10-bảo-mật-và-phân-quyền">10. Bảo mật và phân quyền</h2>
-<h3 id="101-tiêu-chí-tự-đánh-giá-tiêu-chí-khác-2">10.1. Tiêu chí tự đánh giá (Tiêu chí khác #2)</h3>
+<h3 id="101-cơ-chế-bảo-mật-triển-khai">10.1. Cơ chế bảo mật triển khai</h3>
 <table>
 <thead>
 <tr>
@@ -1272,15 +1341,11 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 </tr>
 <tr>
 <td><strong>Mật khẩu</strong></td>
-<td>Hash bcrypt (passlib), lưu plain trong <code>.env</code> dev</td>
-</tr>
-<tr>
-<td><strong>Token</strong></td>
-<td>JWT HS256, hết hạn 8 giờ</td>
+<td>Hash bcrypt (passlib), lưu plain trong <code>src/.env</code> dev</td>
 </tr>
 <tr>
 <td><strong>Cấu hình</strong></td>
-<td><code>SECRET_KEY</code>, <code>ADMIN_PASSWORD</code> qua <code>.env</code>, không commit</td>
+<td><code>SECRET_KEY</code>, <code>ADMIN_PASSWORD</code> qua <code>src/.env</code>, không commit</td>
 </tr>
 </tbody>
 </table>
@@ -1289,7 +1354,7 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
     participant A as Admin
     participant API as /api/admin/login
     participant T as JWT
-  participant Train as /api/admin/train
+    participant Train as /api/admin/train
 
     A->>API: username + password
     API->>API: So khớp .env
@@ -1301,7 +1366,7 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 </div></code></pre>
 <hr>
 <h2 id="11-kiểm-thử-hệ-thống">11. Kiểm thử hệ thống</h2>
-<h3 id="111-tiêu-chí-tự-đánh-giá-tiêu-chí-khác-3">11.1. Tiêu chí tự đánh giá (Tiêu chí khác #3)</h3>
+<h3 id="111-kết-quả-kiểm-thử">11.1. Kết quả kiểm thử</h3>
 <table>
 <thead>
 <tr>
@@ -1318,62 +1383,63 @@ best_score = <span class="hljs-built_in">float</span>(scores[best_idx])
 <td>Train 1 file</td>
 <td><code>sample-minhlong.json</code></td>
 <td><code>entry_count = 5</code>, status ok</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>2</td>
 <td>Train nhiều file</td>
 <td>2 file JSON</td>
 <td>Gộp entries, không trùng id</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>3</td>
 <td>Chat có dữ liệu</td>
 <td>&quot;Giá xe Vario 125&quot;</td>
 <td>Trả lời + confidence &gt; 0.25</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>4</td>
 <td>Chat không có dữ liệu</td>
 <td>&quot;Thời tiết hôm nay&quot;</td>
 <td>Câu fallback, confidence thấp</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>5</td>
 <td>Chưa train</td>
 <td>Model chưa load</td>
 <td>&quot;Hệ thống chưa được train...&quot;</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>6</td>
-<td>Admin sai MK</td>
+<td>Admin sai mật khẩu</td>
 <td>password sai</td>
 <td>HTTP 401</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>7</td>
 <td>API health</td>
 <td>GET <code>/api/health</code></td>
 <td><code>model_ready: true</code> sau train</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 <tr>
 <td>8</td>
 <td>Site content</td>
 <td>GET <code>/api/site-content</code></td>
 <td>108 entries, 6 featured</td>
-<td>Đạt</td>
+<td>Pass</td>
 </tr>
 </tbody>
 </table>
-<h3 id="112-hướng-dẫn-chạy-thử-cho-giảng-viên">11.2. Hướng dẫn chạy thử cho giảng viên</h3>
+<h3 id="112-hướng-dẫn-chạy-thử-hệ-thống">11.2. Hướng dẫn chạy thử hệ thống</h3>
 <pre class="hljs"><code><div><span class="hljs-built_in">cd</span> motorcycle<span class="hljs-literal">-advisor-chatbot</span>
 .venv\Scripts\activate
+<span class="hljs-variable">$env:PYTHONPATH</span> = <span class="hljs-string">&quot;src&quot;</span>
 uvicorn backend.main:app <span class="hljs-literal">--reload</span> <span class="hljs-literal">--port</span> <span class="hljs-number">8000</span>
 </div></code></pre>
 <ol>
@@ -1423,7 +1489,7 @@ uvicorn backend.main:app <span class="hljs-literal">--reload</span> <span class=
 <p>Nhóm 12 đã hoàn thành hệ thống <strong>Chatbot tư vấn khách hàng cho cửa hàng bán xe máy</strong> đáp ứng yêu cầu đồ án môn Phát Triển Hệ Thống Thông Minh:</p>
 <ul>
 <li><strong>Tự xây dựng AI</strong> bằng TF-IDF + Cosine Similarity, có giải thích lý thuyết và sơ đồ đầy đủ.</li>
-<li><strong>Train từ dữ liệu JSON</strong> (<code>DataRef/</code>), admin chọn nhiều file, không phụ thuộc LLM thương mại khi chat.</li>
+<li><strong>Train từ dữ liệu JSON</strong> (<code>src/DataRef/</code>), admin chọn nhiều file, không phụ thuộc LLM thương mại khi chat.</li>
 <li><strong>Công cụ scrape</strong> chuyển website thành JSON chuẩn hóa.</li>
 <li><strong>Giao diện web</strong> mô phỏng cửa hàng Minh Long Motor với widget chat luôn hiển thị.</li>
 </ul>
@@ -1439,19 +1505,21 @@ python <span class="hljs-literal">-m</span> venv .venv
 .venv\Scripts\activate
 
 <span class="hljs-comment"># 3. Cài dependencies</span>
-pip install <span class="hljs-literal">-r</span> requirements.txt
+pip install <span class="hljs-literal">-r</span> src/requirements.txt
 
 <span class="hljs-comment"># 4. Cấu hình</span>
-<span class="hljs-built_in">copy</span> .env.example .env
+<span class="hljs-built_in">copy</span> src\.env.example src\.env
 
 <span class="hljs-comment"># 5. Scrape dữ liệu (tùy chọn)</span>
+<span class="hljs-variable">$env:PYTHONPATH</span> = <span class="hljs-string">&quot;src&quot;</span>
 python <span class="hljs-literal">-m</span> tools.url_to_json https://minhlongmoto.com/ ^
-  <span class="hljs-literal">--output</span> DataRef/minhlongmoto<span class="hljs-literal">-com</span>.json <span class="hljs-literal">--max-pages</span> <span class="hljs-number">30</span>
+  <span class="hljs-literal">--output</span> src/DataRef/minhlongmoto<span class="hljs-literal">-com</span>.json <span class="hljs-literal">--max-pages</span> <span class="hljs-number">30</span>
 
 <span class="hljs-comment"># 6. Chạy server</span>
+<span class="hljs-variable">$env:PYTHONPATH</span> = <span class="hljs-string">&quot;src&quot;</span>
 uvicorn backend.main:app <span class="hljs-literal">--reload</span> <span class="hljs-literal">--port</span> <span class="hljs-number">8000</span>
 </div></code></pre>
-<h3 id="phụ-lục-b--biến-môi-trường-env">Phụ lục B — Biến môi trường <code>.env</code></h3>
+<h3 id="phụ-lục-b--biến-môi-trường-srcenv">Phụ lục B — Biến môi trường <code>src/.env</code></h3>
 <table>
 <thead>
 <tr>
@@ -1521,104 +1589,49 @@ uvicorn backend.main:app <span class="hljs-literal">--reload</span> <span class=
 </thead>
 <tbody>
 <tr>
-<td><code>backend/ai/vectorizer.py</code></td>
+<td><code>src/backend/ai/vectorizer.py</code></td>
 <td>~90</td>
 <td>Core AI train &amp; predict</td>
 </tr>
 <tr>
-<td><code>backend/ingest/json_loader.py</code></td>
+<td><code>src/backend/ingest/json_loader.py</code></td>
 <td>~68</td>
 <td>Đọc DataRef JSON</td>
 </tr>
 <tr>
-<td><code>backend/api/chat.py</code></td>
+<td><code>src/backend/api/chat.py</code></td>
 <td>~25</td>
 <td>Endpoint chat</td>
 </tr>
 <tr>
-<td><code>backend/api/admin.py</code></td>
+<td><code>src/backend/api/admin.py</code></td>
 <td>~100</td>
 <td>Login, train</td>
 </tr>
 <tr>
-<td><code>backend/api/site.py</code></td>
+<td><code>src/backend/api/site.py</code></td>
 <td>~180</td>
 <td>Nội dung trang chủ</td>
 </tr>
 <tr>
-<td><code>tools/url_to_json.py</code></td>
+<td><code>src/tools/url_to_json.py</code></td>
 <td>~150</td>
 <td>CLI scrape</td>
 </tr>
 <tr>
-<td><code>frontend/index.html</code></td>
+<td><code>src/frontend/index.html</code></td>
 <td>~135</td>
 <td>Trang chủ</td>
 </tr>
 <tr>
-<td><code>frontend/js/chat.js</code></td>
+<td><code>src/frontend/js/chat.js</code></td>
 <td>~70</td>
 <td>Logic chat widget</td>
 </tr>
 <tr>
-<td><code>frontend/css/style.css</code></td>
+<td><code>src/frontend/css/style.css</code></td>
 <td>~680</td>
 <td>Giao diện</td>
-</tr>
-</tbody>
-</table>
-<h3 id="phụ-lục-e--checklist-đối-chiếu-tiêu-chí-chấm-điểm">Phụ lục E — Checklist đối chiếu tiêu chí chấm điểm</h3>
-<table>
-<thead>
-<tr>
-<th>Tiêu chí</th>
-<th>Điểm tối đa</th>
-<th>Nội dung báo cáo</th>
-<th>Tự đánh giá</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Đủ mục + mục lục</td>
-<td>1.0</td>
-<td>15 mục, mục lục có anchor</td>
-<td>Đạt</td>
-</tr>
-<tr>
-<td>Vai trò thành viên</td>
-<td>0.5</td>
-<td>Mục 3 — bảng phân công chi tiết</td>
-<td>Đạt</td>
-</tr>
-<tr>
-<td>Công nghệ áp dụng</td>
-<td>0.5</td>
-<td>Mục 5 — bảng công nghệ + coding patterns</td>
-<td>Đạt</td>
-</tr>
-<tr>
-<td>Thuật toán AI</td>
-<td>3.0</td>
-<td>Mục 6 — train, inference, công thức, 7 sơ đồ</td>
-<td>Đạt</td>
-</tr>
-<tr>
-<td>Tiêu chí khác (×3)</td>
-<td>—</td>
-<td>Mục 7, 10, 11 — DQ dữ liệu, bảo mật, kiểm thử</td>
-<td>Đạt</td>
-</tr>
-<tr>
-<td>Giao diện &amp; hình ảnh</td>
-<td>1.5</td>
-<td>Mục 9 — mô tả UI + gợi ý chụp màn hình</td>
-<td>Đạt</td>
-</tr>
-<tr>
-<td>Phụ lục &amp; tham khảo</td>
-<td>0.5</td>
-<td>Mục 14, 15</td>
-<td>Đạt</td>
 </tr>
 </tbody>
 </table>

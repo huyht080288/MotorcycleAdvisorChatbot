@@ -1,6 +1,6 @@
 ---
 description: Thuật toán AI và luồng train/inference
-globs: backend/ai/**/*
+globs: src/backend/ai/**/*
 alwaysApply: false
 ---
 
@@ -15,14 +15,14 @@ alwaysApply: false
 
 ## Train
 
-- Input: danh sách file `DataRef/*.json` (admin chọn nhiều file)
+- Input: danh sách file `src/DataRef/*.json` (admin chọn nhiều file)
 - Gộp tất cả `entries` từ các file
 - Vector hóa trên text = `question + " " + answer`
-- Lưu `data/model/vectorizer.joblib` và `data/model/knowledge.joblib`
+- Lưu `src/data/model/vectorizer.joblib` và `src/data/model/knowledge.joblib`
 
 ## Cấm
 
-- Không gọi API LLM trong `backend/ai/` hoặc `api/chat.py`
+- Không gọi API LLM trong `src/backend/ai/` hoặc `api/chat.py`
 - Không thay TF-IDF bằng embedding API hoặc pre-trained LLM cho inference
 
 ## Ví dụ matching

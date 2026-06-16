@@ -51,7 +51,7 @@ Nhóm 12 triển khai hệ thống **Motorcycle Advisor Chatbot** — chatbot t�
 Điểm khác biệt của dự án:
 
 - AI **tự triển khai**, có thể giải thích từng bước train và inference.
-- Dữ liệu train lưu tại `DataRef/*.json`, admin chọn nhiều file để train lại model.
+- Dữ liệu train lưu tại `src/DataRef/*.json`, admin chọn nhiều file để train lại model.
 - Công cụ CLI riêng chuyển URL website thành file JSON chuẩn hóa.
 - Giao diện web mô phỏng website cửa hàng xe máy kèm widget chat cố định.
 
@@ -73,7 +73,7 @@ Nhóm 12 triển khai hệ thống **Motorcycle Advisor Chatbot** — chatbot t�
 **Trong phạm vi:**
 
 - Chat khách tiếng Việt qua giao diện web.
-- Train AI từ một hoặc nhiều file `DataRef/*.json`.
+- Train AI từ một hoặc nhiều file `src/DataRef/*.json`.
 - Công cụ CLI scrape URL → JSON.
 - Trang admin: đăng nhập, chọn file, train model.
 - Hiển thị nội dung cửa hàng (xe nổi bật, khuyến mãi, dịch vụ, chi nhánh) từ dữ liệu JSON.
@@ -92,15 +92,15 @@ Nhóm 12 triển khai hệ thống **Motorcycle Advisor Chatbot** — chatbot t�
 
 | Thành viên | MSSV | Vai trò | Công việc đảm nhận | Kết quả đóng góp |
 |------------|------|---------|-------------------|------------------|
-| **Văn Trần Hữu Hoàng** | K23DTCN124 | Trưởng nhóm, Backend & AI | Thiết kế kiến trúc; triển khai `backend/ai/` (TF-IDF, cosine); API `/api/chat`, `/api/admin/train`; tích hợp FastAPI | Module AI hoạt động, API ổn định |
+| **Văn Trần Hữu Hoàng** | K23DTCN124 | Trưởng nhóm, Backend & AI | Thiết kế kiến trúc; triển khai `src/backend/ai/` (TF-IDF, cosine); API `/api/chat`, `/api/admin/train`; tích hợp FastAPI | Module AI hoạt động, API ổn định |
 | **Hồ Tiến Huy** | K23DTCN138 | Frontend & UX | Thiết kế `index.html`, `admin.html`; CSS theme cửa hàng xe; widget chat cố định góc phải; JS tích hợp API | Giao diện hoàn chỉnh, trải nghiệm chat mượt |
-| **Lương Hồng Hưng** | K25DTCN324 | Dữ liệu & Kiểm thử | Chạy `tools/url_to_json` scrape minhlongmoto.com; kiểm tra `DataRef/*.json`; test train/chat; biên soạn báo cáo | File `minhlongmoto-com.json` (108 entries), tài liệu dự án |
+| **Lương Hồng Hưng** | K25DTCN324 | Dữ liệu & Kiểm thử | Chạy `src/tools/url_to_json` scrape minhlongmoto.com; kiểm tra `src/DataRef/*.json`; test train/chat; biên soạn báo cáo | File `minhlongmoto-com.json` (108 entries), tài liệu dự án |
 
 ### 3.2. Quy trình làm việc nhóm
 
 ```mermaid
 flowchart LR
-    A[Lương Hồng Hưng<br/>Thu thập dữ liệu] --> B[DataRef/*.json]
+    A[Lương Hồng Hưng<br/>Thu thập dữ liệu] --> B[src/DataRef/*.json]
     B --> C[Văn Trần Hữu Hoàng<br/>Train AI + API]
     C --> D[Hồ Tiến Huy<br/>Giao diện + Chat]
     D --> E[Kiểm thử chung]
@@ -130,12 +130,12 @@ flowchart TB
     end
 
     subgraph Data["Dữ liệu"]
-        JSON[DataRef/*.json]
-        Model[data/model/*.joblib]
+        JSON[src/DataRef/*.json]
+        Model[src/data/model/*.joblib]
     end
 
     subgraph Tools["Công cụ CLI"]
-        Scraper[tools/url_to_json.py]
+        Scraper[src/tools/url_to_json.py]
     end
 
     URL[minhlongmoto.com] --> Scraper
@@ -157,33 +157,22 @@ flowchart TB
 
 ```
 motorcycle-advisor-chatbot/
-├── DataRef/                 # Dữ liệu train (JSON)
-│   ├── minhlongmoto-com.json
-│   └── sample-minhlong.json
-├── tools/                   # CLI: URL → JSON
-│   └── url_to_json.py
-├── backend/
-│   ├── main.py              # FastAPI entry point
-│   ├── api/
-│   │   ├── chat.py          # API chat khách
-│   │   ├── admin.py         # Login, train
-│   │   └── site.py          # Nội dung trang chủ
-│   ├── ai/
-│   │   ├── preprocessor.py  # Tiền xử lý văn bản
-│   │   └── vectorizer.py    # TF-IDF + inference
-│   └── ingest/
-│       └── json_loader.py   # Đọc & gộp JSON
-├── frontend/
-│   ├── index.html           # Trang chủ + chat widget
-│   ├── admin.html           # Trang quản trị
-│   ├── css/style.css
-│   └── js/
-│       ├── site.js
-│       ├── chat.js
-│       └── admin.js
-├── data/model/              # Model sau khi train
-├── Report/                  # Báo cáo đồ án
-└── requirements.txt
+├── src/                     # Toàn bộ source + config ứng dụng
+│   ├── backend/
+│   │   ├── main.py
+│   │   ├── paths.py
+│   │   ├── api/
+│   │   ├── ai/
+│   │   └── ingest/
+│   ├── frontend/
+│   ├── tools/
+│   ├── DataRef/             # Dữ liệu train (JSON)
+│   ├── data/model/          # Model sau khi train
+│   ├── .env.example
+│   └── requirements.txt
+├── Report/
+├── run.ps1 / run.bat
+└── .venv/
 ```
 
 ### 4.3. Mô hình triển khai (Deployment)
@@ -218,10 +207,10 @@ sequenceDiagram
 | **Machine Learning** | scikit-learn | ≥ 1.4 | `TfidfVectorizer`, `cosine_similarity` |
 | **Lưu model** | joblib | ≥ 1.3 | Serialize vectorizer & knowledge base |
 | **Xác thực** | python-jose, passlib, bcrypt | — | JWT token cho admin |
-| **Cấu hình** | python-dotenv | ≥ 1.0 | Biến môi trường `.env` |
 | **Scrape web** | requests, BeautifulSoup4, lxml | — | CLI `url_to_json` |
 | **Frontend** | HTML5, CSS3, JavaScript (ES6+) | — | Giao diện thuần, không framework |
-| **Định dạng dữ liệu** | JSON | — | Knowledge base `DataRef/` |
+| **Định dạng dữ liệu** | JSON | — | Knowledge base `src/DataRef/` |
+| **Cấu hình** | python-dotenv | ≥ 1.0 | Biến môi trường `src/.env` |
 | **Version control** | Git | — | Quản lý mã nguồn |
 
 ### 5.2. Mô hình lập trình (Coding patterns)
@@ -229,12 +218,12 @@ sequenceDiagram
 | Mô hình / Nguyên tắc | Áp dụng tại | Mô tả |
 |---------------------|-------------|--------|
 | **MVC / Layered Architecture** | Toàn dự án | Tách `frontend` (View), `api` (Controller), `ai` + `ingest` (Model/Service) |
-| **Singleton** | `backend/ai/vectorizer.py` | Biến `model = ChatbotModel()` dùng chung toàn app |
+| **Singleton** | `src/backend/ai/vectorizer.py` | Biến `model = ChatbotModel()` dùng chung toàn app |
 | **Repository pattern** | `json_loader.py` | Tách logic đọc/ghép file JSON khỏi business logic |
-| **RESTful API** | `backend/api/` | Endpoint theo tài nguyên: `/chat`, `/admin/train`, `/site-content` |
+| **RESTful API** | `src/backend/api/` | Endpoint theo tài nguyên: `/chat`, `/admin/train`, `/site-content` |
 | **DTO (Data Transfer Object)** | Pydantic models | `ChatRequest`, `TrainRequest`, `LoginRequest` validate input |
-| **Environment-based config** | `.env` | Mật khẩu admin, secret key, ngưỡng confidence |
-| **Separation of Concerns** | `tools/` vs `backend/` | Công cụ scrape tách biệt khỏi ứng dụng web |
+| **Environment-based config** | `src/.env` | Mật khẩu admin, secret key, ngưỡng confidence |
+| **Separation of Concerns** | `src/tools/` vs `src/backend/` | Công cụ scrape tách biệt khỏi ứng dụng web |
 
 ### 5.3. API Endpoints
 
@@ -252,20 +241,76 @@ sequenceDiagram
 
 ## 6. Thuật toán AI
 
-> **Đây là phần trọng tâm của đồ án (3 điểm).** Nhóm sử dụng chatbot dạng **truy xuất thông tin (Retrieval-Based)**, không sinh văn bản tự do như LLM.
+Nhóm sử dụng chatbot dạng **truy xuất thông tin (Retrieval-Based Chatbot)**, không sinh văn bản tự do như LLM. Hệ thống tìm câu trả lời phù hợp nhất từ kho tri thức đã được chuẩn bị trước, thay vì tạo nội dung mới từ đầu.
 
-### 6.1. Tổng quan thuật toán
+### 6.1. Giới thiệu về thuật toán
 
-| Thuật toán | Thư viện / File | Mục đích |
-|------------|-----------------|----------|
-| **TF-IDF** | `sklearn.TfidfVectorizer` — `vectorizer.py` | Chuyển văn bản thành vector số, đo mức quan trọng từ khóa |
-| **Cosine Similarity** | `sklearn.metrics.pairwise` — `vectorizer.py` | So sánh độ tương đồng giữa câu hỏi và từng mục knowledge |
-| **Text Preprocessing** | `preprocessor.py` | Chuẩn hóa câu hỏi trước khi vector hóa |
-| **Threshold Classification** | `vectorizer.py` | Lọc câu trả lời khi độ tin cậy thấp |
+#### 6.1.1. Bài toán cần giải quyết
 
-**Lưu ý:** Nhóm **không** sử dụng ChatGPT, Gemini hay bất kỳ API LLM nào trong luồng `/api/chat`. Việc scrape website (`tools/`) có thể dùng công cụ hỗ trợ bên ngoài, nhưng **inference hoàn toàn bằng TF-IDF**.
+Khách hàng đặt câu hỏi bằng ngôn ngữ tự nhiên (tiếng Việt) về xe máy, giá cả, khuyến mãi hoặc dịch vụ. Hệ thống cần:
 
-### 6.2. Lý thuyết TF-IDF
+1. **Hiểu** câu hỏi ở mức từ khóa và ngữ cảnh từ vựng.
+2. **Tìm** thông tin liên quan nhất trong knowledge base.
+3. **Trả lời** bằng nội dung đã có sẵn, kèm mức độ tin cậy.
+
+#### 6.1.2. Hướng tiếp cận: Retrieval-Based Chatbot
+
+```mermaid
+flowchart LR
+    A[Dữ liệu train<br/>src/DataRef JSON] --> B[Vector hóa TF-IDF]
+    B --> C[Ma trận knowledge]
+    D[Câu hỏi khách] --> E[Tiền xử lý]
+    E --> F[Vector hóa câu hỏi]
+    F --> G[Cosine Similarity]
+    C --> G
+    G --> H[Câu trả lời khớp nhất]
+```
+
+**Retrieval-Based Chatbot** (chatbot dựa trên truy xuất) hoạt động theo nguyên tắc: mỗi câu hỏi được ánh xạ tới **một mục** (entry) trong cơ sở tri thức có nội dung gần giống nhất. Đây là phương pháp cổ điển trong **Information Retrieval (IR)** — lĩnh vực tìm kiếm và xếp hạng tài liệu theo mức độ liên quan.
+
+So với chatbot sinh văn bản (generative AI như ChatGPT):
+
+| Đặc điểm | Retrieval-Based (nhóm triển khai) | Generative LLM |
+|----------|-----------------------------------|----------------|
+| Nguồn câu trả lời | Chỉ từ dữ liệu đã train | Sinh mới từ mô hình ngôn ngữ |
+| Khả năng giải thích | Rõ ràng — biết entry nào được chọn | Khó kiểm chứng |
+| Yêu cầu đồ án | **Phù hợp** — tự triển khai, có công thức | Không được dùng |
+
+#### 6.1.3. Lý do chọn TF-IDF và Cosine Similarity
+
+- **TF-IDF**: Biểu diễn văn bản dưới dạng vector số, nhấn mạnh từ khóa đặc trưng (tên xe, giá, địa điểm) và giảm trọng số từ phổ biến (*xe*, *máy*).
+- **Cosine Similarity**: Đo độ giống nhau giữa vector câu hỏi và vector từng entry; phù hợp khi so sánh tài liệu có độ dài khác nhau.
+- **Ưu điểm cho đồ án sinh viên**: Triển khai nhanh bằng scikit-learn, không cần GPU, dễ vẽ sơ đồ và minh họa từng bước.
+
+**Lưu ý:** Nhóm **không** sử dụng ChatGPT, Gemini hay bất kỳ API LLM nào trong luồng `/api/chat`. Việc scrape website (`src/tools/`) có thể dùng công cụ hỗ trợ bên ngoài, nhưng **inference hoàn toàn bằng TF-IDF**.
+
+### 6.2. Thuật toán sử dụng và vị trí áp dụng trong mã nguồn
+
+| Thuật toán / Kỹ thuật | Thư viện | File áp dụng | Giai đoạn | Mục đích |
+|----------------------|----------|--------------|-----------|----------|
+| **TF-IDF** | `sklearn.TfidfVectorizer` | `src/backend/ai/vectorizer.py` | Train + Inference | Chuyển văn bản thành vector số |
+| **Cosine Similarity** | `sklearn.metrics.pairwise` | `src/backend/ai/vectorizer.py` | Inference | So khớp câu hỏi với knowledge base |
+| **Text Preprocessing** | `re`, `unicodedata` | `src/backend/ai/preprocessor.py` | Inference | Chuẩn hóa câu hỏi trước khi vector hóa |
+| **Ngưỡng tin cậy** | Logic tùy chỉnh | `src/backend/ai/vectorizer.py` | Inference | Lọc câu trả lời khi điểm similarity thấp |
+| **Gộp dữ liệu JSON** | — | `src/backend/ingest/json_loader.py` | Train | Đọc và merge nhiều file `DataRef/` |
+
+```mermaid
+flowchart TB
+    subgraph Train["Giai đoạn Train"]
+        J[json_loader.py] --> V[vectorizer.py<br/>fit_transform]
+    end
+
+    subgraph Inference["Giai đoạn Inference"]
+        P[preprocessor.py] --> V2[vectorizer.py<br/>transform + cosine]
+    end
+
+    subgraph API["API Layer"]
+        C[chat.py] --> V2
+        A[admin.py] --> J
+    end
+```
+
+### 6.3. Lý thuyết TF-IDF
 
 **TF (Term Frequency)** — tần suất xuất hiện của từ `t` trong tài liệu `d`:
 
@@ -302,7 +347,7 @@ TfidfVectorizer(
 )
 ```
 
-### 6.3. Lý thuyết Cosine Similarity
+### 6.4. Lý thuyết Cosine Similarity
 
 Sau khi vector hóa, mỗi câu hỏi và mỗi mục knowledge là một vector trong không gian nhiều chiều. **Cosine Similarity** đo cosin của góc giữa hai vector:
 
@@ -315,13 +360,13 @@ Sau khi vector hóa, mỗi câu hỏi và mỗi mục knowledge là một vector
 
 Nhóm chọn mục có **điểm cosine cao nhất** (`argmax`) làm câu trả lời.
 
-### 6.4. Cách train AI
+### 6.5. Cách train AI
 
-#### 6.4.1. Sơ đồ quy trình train
+#### 6.5.1. Sơ đồ quy trình train
 
 ```mermaid
 flowchart TD
-    A[Admin đăng nhập] --> B[Chọn nhiều file DataRef/*.json]
+    A[Admin đăng nhập] --> B[Chọn nhiều file src/DataRef/*.json]
     B --> C[POST /api/admin/train]
     C --> D[json_loader: gộp entries]
     D --> E[Tạo document = question + answer]
@@ -332,9 +377,9 @@ flowchart TD
     I --> J[Model sẵn sàng cho chat]
 ```
 
-#### 6.4.2. Các bước chi tiết
+#### 6.5.2. Các bước chi tiết
 
-**Bước 1 — Nạp dữ liệu:** Admin chọn một hoặc nhiều file JSON trong `DataRef/`. Hàm `load_multiple_files()` gộp tất cả `entries`, xử lý trùng `id`.
+**Bước 1 — Nạp dữ liệu:** Admin chọn một hoặc nhiều file JSON trong `src/DataRef/`. Hàm `load_multiple_files()` gộp tất cả `entries`, xử lý trùng `id`.
 
 **Bước 2 — Tạo document:** Mỗi entry được ghép:
 
@@ -356,16 +401,16 @@ Ví dụ: *"Giá xe Honda Vario 125 2026 bao nhiêu? Honda Vario 125 thế hệ 
 
 **Bước 5 — Khởi động lại:** Khi server start, `model.load()` tự nạp model nếu đã train trước đó.
 
-#### 6.4.3. Dữ liệu train thực tế
+#### 6.5.3. Dữ liệu train thực tế
 
-- File chính: `DataRef/minhlongmoto-com.json`
+- File chính: `src/DataRef/minhlongmoto-com.json`
 - Nguồn scrape: https://minhlongmoto.com/
 - Số entry: **108** cặp question–answer
 - Nội dung: giá xe, khuyến mãi, xe điện, dịch vụ, địa chỉ, FAQ…
 
-### 6.5. Cách AI phân tích và trả lời câu hỏi
+### 6.6. Cách AI phân tích và trả lời câu hỏi
 
-#### 6.5.1. Sơ đồ luồng inference
+#### 6.6.1. Sơ đồ luồng inference
 
 ```mermaid
 flowchart TD
@@ -380,7 +425,7 @@ flowchart TD
     F --> R
 ```
 
-#### 6.5.2. Tiền xử lý (`preprocessor.py`)
+#### 6.6.2. Tiền xử lý (`preprocessor.py`)
 
 ```python
 def preprocess(text: str) -> str:
@@ -392,7 +437,7 @@ def preprocess(text: str) -> str:
 
 **Mục đích:** Giảm sai lệch do viết hoa/thường, khoảng trắng thừa.
 
-#### 6.5.3. Vector hóa & so khớp (`vectorizer.py`)
+#### 6.6.3. Vector hóa & so khớp (`vectorizer.py`)
 
 ```python
 query_vec = self.vectorizer.transform([query])
@@ -401,13 +446,13 @@ best_idx = int(scores.argmax())
 best_score = float(scores[best_idx])
 ```
 
-#### 6.5.4. Ngưỡng tin cậy (Confidence Threshold)
+#### 6.6.4. Ngưỡng tin cậy (Confidence Threshold)
 
-- Mặc định: **0.25** (cấu hình qua `.env`: `CONFIDENCE_THRESHOLD`)
+- Mặc định: **0.25** (cấu hình qua `src/.env`: `CONFIDENCE_THRESHOLD`)
 - Nếu `best_score < threshold` → bot trả lời: *"Xin lỗi, em chưa có thông tin cho câu hỏi này..."*
-- Frontend hiển thị `%` độ tin cậy để minh họa cho giảng viên / người dùng.
+- Frontend hiển thị `%` độ tin cậy để người dùng đánh giá mức phù hợp của câu trả lời.
 
-#### 6.5.5. Ví dụ minh họa
+#### 6.6.5. Ví dụ minh họa
 
 | Câu hỏi khách | Entry khớp nhất | Confidence (ước lượng) |
 |---------------|-----------------|------------------------|
@@ -415,7 +460,7 @@ best_score = float(scores[best_idx])
 | "Địa chỉ Dĩ An" | "Thông tin về Địa chỉ các chi nhánh..." | ~0.30–0.40 |
 | "Thời tiết hôm nay" | Không khớp | < 0.25 → fallback |
 
-### 6.6. So sánh với các hướng tiếp cận khác
+### 6.7. So sánh với các hướng tiếp cận khác
 
 | Phương pháp | Ưu điểm | Nhược điểm | Dùng trong đồ án? |
 |-------------|---------|------------|-------------------|
@@ -424,7 +469,7 @@ best_score = float(scores[best_idx])
 | **Word2Vec / Embedding** | Hiểu nghĩa từ tốt hơn | Cần corpus lớn hoặc pre-trained | Không |
 | **LLM (ChatGPT…)** | Trả lời tự nhiên | Vi phạm yêu cầu đồ án | **Không** |
 
-### 6.7. Sơ đồ kiến trúc module AI
+### 6.8. Sơ đồ kiến trúc module AI
 
 ```mermaid
 classDiagram
@@ -479,7 +524,7 @@ classDiagram
 
 ```bash
 python -m tools.url_to_json https://minhlongmoto.com/ \
-  --output DataRef/minhlongmoto-com.json \
+  --output src/DataRef/minhlongmoto-com.json \
   --max-pages 30
 ```
 
@@ -493,16 +538,17 @@ flowchart LR
     D --> E[Tạo question/answer]
     E --> F[Thu thập link cùng domain]
     F --> B
-    D --> G[Ghi DataRef/*.json]
+    D --> G[Ghi src/DataRef/*.json]
 ```
 
-### 7.3. Tiêu chí tự đánh giá (Tiêu chí khác #1)
+### 7.3. Quản lý chất lượng dữ liệu
 
-**Quản lý chất lượng dữ liệu:**
+**Quy trình đảm bảo dữ liệu train:**
 
 - Loại bỏ entry thiếu `question` hoặc `answer`.
 - Gán `id` unique; xử lý trùng khi gộp nhiều file.
 - Dữ liệu có thể chỉnh sửa thủ công trước khi train.
+- Kiểm tra mẫu ngẫu nhiên sau khi scrape để đảm bảo nội dung không lẫn menu/breadcrumb website.
 
 ---
 
@@ -523,7 +569,7 @@ flowchart LR
 | STT | Chức năng | Mô tả |
 |-----|-----------|--------|
 | 1 | Đăng nhập | JWT Bearer token, session 8 giờ |
-| 2 | Liệt kê file JSON | Hiển thị tất cả file trong `DataRef/` |
+| 2 | Liệt kê file JSON | Hiển thị tất cả file trong `src/DataRef/` |
 | 3 | Train AI | Chọn **nhiều** file → gộp → rebuild model |
 | 4 | Xem trạng thái | Số entry đã train, model ready hay chưa |
 
@@ -594,26 +640,26 @@ flowchart TB
 - Danh sách checkbox chọn file JSON.
 - Nút **Train** + thông báo kết quả (số entry, file đã dùng).
 
-### 9.5. Minh họa giao diện (mô tả để chụp màn hình đính kèm)
+### 9.5. Hình ảnh minh họa giao diện
 
-> **Gợi ý khi nộp bản in:** Chèn ảnh chụp màn hình vào các vị trí sau:
-> - Hình 1: Trang chủ — phần Hero và xe nổi bật
-> - Hình 2: Widget chat đang mở với câu trả lời và % tin cậy
-> - Hình 3: Trang Admin — màn hình Train
-> - Hình 4: Kết quả chat hỏi về giá xe / địa chỉ
+Báo cáo kèm các hình chụp màn hình sau (chèn khi in bản cứng hoặc nộp file PDF):
+
+- **Hình 1:** Trang chủ — phần Hero và xe nổi bật
+- **Hình 2:** Widget chat đang mở với câu trả lời và % tin cậy
+- **Hình 3:** Trang Admin — màn hình Train
+- **Hình 4:** Kết quả chat hỏi về giá xe / địa chỉ cửa hàng
 
 ---
 
 ## 10. Bảo mật và phân quyền
 
-### 10.1. Tiêu chí tự đánh giá (Tiêu chí khác #2)
+### 10.1. Cơ chế bảo mật triển khai
 
 | Cơ chế | Triển khai |
 |--------|------------|
 | **Phân quyền** | Guest chỉ `/api/chat`; Admin cần JWT |
-| **Mật khẩu** | Hash bcrypt (passlib), lưu plain trong `.env` dev |
-| **Token** | JWT HS256, hết hạn 8 giờ |
-| **Cấu hình** | `SECRET_KEY`, `ADMIN_PASSWORD` qua `.env`, không commit |
+| **Mật khẩu** | Hash bcrypt (passlib), lưu plain trong `src/.env` dev |
+| **Cấu hình** | `SECRET_KEY`, `ADMIN_PASSWORD` qua `src/.env`, không commit |
 
 ### 10.2. Sơ đồ xác thực Admin
 
@@ -622,7 +668,7 @@ sequenceDiagram
     participant A as Admin
     participant API as /api/admin/login
     participant T as JWT
-  participant Train as /api/admin/train
+    participant Train as /api/admin/train
 
     A->>API: username + password
     API->>API: So khớp .env
@@ -637,24 +683,25 @@ sequenceDiagram
 
 ## 11. Kiểm thử hệ thống
 
-### 11.1. Tiêu chí tự đánh giá (Tiêu chí khác #3)
+### 11.1. Kết quả kiểm thử
 
 | STT | Test case | Input | Kỳ vọng | Kết quả |
 |-----|-----------|-------|---------|---------|
-| 1 | Train 1 file | `sample-minhlong.json` | `entry_count = 5`, status ok | Đạt |
-| 2 | Train nhiều file | 2 file JSON | Gộp entries, không trùng id | Đạt |
-| 3 | Chat có dữ liệu | "Giá xe Vario 125" | Trả lời + confidence > 0.25 | Đạt |
-| 4 | Chat không có dữ liệu | "Thời tiết hôm nay" | Câu fallback, confidence thấp | Đạt |
-| 5 | Chưa train | Model chưa load | "Hệ thống chưa được train..." | Đạt |
-| 6 | Admin sai MK | password sai | HTTP 401 | Đạt |
-| 7 | API health | GET `/api/health` | `model_ready: true` sau train | Đạt |
-| 8 | Site content | GET `/api/site-content` | 108 entries, 6 featured | Đạt |
+| 1 | Train 1 file | `sample-minhlong.json` | `entry_count = 5`, status ok | Pass |
+| 2 | Train nhiều file | 2 file JSON | Gộp entries, không trùng id | Pass |
+| 3 | Chat có dữ liệu | "Giá xe Vario 125" | Trả lời + confidence > 0.25 | Pass |
+| 4 | Chat không có dữ liệu | "Thời tiết hôm nay" | Câu fallback, confidence thấp | Pass |
+| 5 | Chưa train | Model chưa load | "Hệ thống chưa được train..." | Pass |
+| 6 | Admin sai mật khẩu | password sai | HTTP 401 | Pass |
+| 7 | API health | GET `/api/health` | `model_ready: true` sau train | Pass |
+| 8 | Site content | GET `/api/site-content` | 108 entries, 6 featured | Pass |
 
-### 11.2. Hướng dẫn chạy thử cho giảng viên
+### 11.2. Hướng dẫn chạy thử hệ thống
 
 ```powershell
 cd motorcycle-advisor-chatbot
 .venv\Scripts\activate
+$env:PYTHONPATH = "src"
 uvicorn backend.main:app --reload --port 8000
 ```
 
@@ -690,7 +737,7 @@ uvicorn backend.main:app --reload --port 8000
 Nhóm 12 đã hoàn thành hệ thống **Chatbot tư vấn khách hàng cho cửa hàng bán xe máy** đáp ứng yêu cầu đồ án môn Phát Triển Hệ Thống Thông Minh:
 
 - **Tự xây dựng AI** bằng TF-IDF + Cosine Similarity, có giải thích lý thuyết và sơ đồ đầy đủ.
-- **Train từ dữ liệu JSON** (`DataRef/`), admin chọn nhiều file, không phụ thuộc LLM thương mại khi chat.
+- **Train từ dữ liệu JSON** (`src/DataRef/`), admin chọn nhiều file, không phụ thuộc LLM thương mại khi chat.
 - **Công cụ scrape** chuyển website thành JSON chuẩn hóa.
 - **Giao diện web** mô phỏng cửa hàng Minh Long Motor với widget chat luôn hiển thị.
 
@@ -711,20 +758,22 @@ python -m venv .venv
 .venv\Scripts\activate
 
 # 3. Cài dependencies
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 
 # 4. Cấu hình
-copy .env.example .env
+copy src\.env.example src\.env
 
 # 5. Scrape dữ liệu (tùy chọn)
+$env:PYTHONPATH = "src"
 python -m tools.url_to_json https://minhlongmoto.com/ ^
-  --output DataRef/minhlongmoto-com.json --max-pages 30
+  --output src/DataRef/minhlongmoto-com.json --max-pages 30
 
 # 6. Chạy server
+$env:PYTHONPATH = "src"
 uvicorn backend.main:app --reload --port 8000
 ```
 
-### Phụ lục B — Biến môi trường `.env`
+### Phụ lục B — Biến môi trường `src/.env`
 
 | Biến | Mặc định | Mô tả |
 |------|----------|--------|
@@ -775,27 +824,15 @@ Content-Type: application/json
 
 | File | Dòng code (ước lượng) | Chức năng |
 |------|----------------------|-----------|
-| `backend/ai/vectorizer.py` | ~90 | Core AI train & predict |
-| `backend/ingest/json_loader.py` | ~68 | Đọc DataRef JSON |
-| `backend/api/chat.py` | ~25 | Endpoint chat |
-| `backend/api/admin.py` | ~100 | Login, train |
-| `backend/api/site.py` | ~180 | Nội dung trang chủ |
-| `tools/url_to_json.py` | ~150 | CLI scrape |
-| `frontend/index.html` | ~135 | Trang chủ |
-| `frontend/js/chat.js` | ~70 | Logic chat widget |
-| `frontend/css/style.css` | ~680 | Giao diện |
-
-### Phụ lục E — Checklist đối chiếu tiêu chí chấm điểm
-
-| Tiêu chí | Điểm tối đa | Nội dung báo cáo | Tự đánh giá |
-|----------|-------------|------------------|-------------|
-| Đủ mục + mục lục | 1.0 | 15 mục, mục lục có anchor | Đạt |
-| Vai trò thành viên | 0.5 | Mục 3 — bảng phân công chi tiết | Đạt |
-| Công nghệ áp dụng | 0.5 | Mục 5 — bảng công nghệ + coding patterns | Đạt |
-| Thuật toán AI | 3.0 | Mục 6 — train, inference, công thức, 7 sơ đồ | Đạt |
-| Tiêu chí khác (×3) | — | Mục 7, 10, 11 — DQ dữ liệu, bảo mật, kiểm thử | Đạt |
-| Giao diện & hình ảnh | 1.5 | Mục 9 — mô tả UI + gợi ý chụp màn hình | Đạt |
-| Phụ lục & tham khảo | 0.5 | Mục 14, 15 | Đạt |
+| `src/backend/ai/vectorizer.py` | ~90 | Core AI train & predict |
+| `src/backend/ingest/json_loader.py` | ~68 | Đọc DataRef JSON |
+| `src/backend/api/chat.py` | ~25 | Endpoint chat |
+| `src/backend/api/admin.py` | ~100 | Login, train |
+| `src/backend/api/site.py` | ~180 | Nội dung trang chủ |
+| `src/tools/url_to_json.py` | ~150 | CLI scrape |
+| `src/frontend/index.html` | ~135 | Trang chủ |
+| `src/frontend/js/chat.js` | ~70 | Logic chat widget |
+| `src/frontend/css/style.css` | ~680 | Giao diện |
 
 ---
 

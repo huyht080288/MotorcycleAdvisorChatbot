@@ -7,7 +7,7 @@ description: Thêm hoặc sửa cặp question-answer trong file DataRef JSON. D
 
 ## Thêm entry mới
 
-Mở file `DataRef/<file>.json`, thêm vào mảng `entries`:
+Mở file `src/DataRef/<file>.json`, thêm vào mảng `entries`:
 
 ```json
 {

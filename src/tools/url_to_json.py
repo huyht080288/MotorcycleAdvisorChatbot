@@ -13,8 +13,8 @@ from urllib.parse import urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup
 
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT_DIR = ROOT / "DataRef"
+SRC_DIR = Path(__file__).resolve().parents[1]
+DEFAULT_OUTPUT_DIR = SRC_DIR / "DataRef"
 
 
 def slugify(text: str) -> str:

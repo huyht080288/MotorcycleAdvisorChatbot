@@ -1,6 +1,6 @@
 __pycache__/
 *.py[cod]
 .venv/
-.env
-data/model/*.joblib
+src/.env
+src/data/model/*.joblib
 .DS_Store

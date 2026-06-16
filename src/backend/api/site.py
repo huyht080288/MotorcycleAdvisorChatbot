@@ -1,13 +1,13 @@
 import json
 import re
-from pathlib import Path
 
 from fastapi import APIRouter
 
+from backend.paths import DATAREF_DIR
+
 router = APIRouter(prefix="/api", tags=["site"])
 
-ROOT = Path(__file__).resolve().parents[2]
-DATAREF_FILE = ROOT / "DataRef" / "minhlongmoto-com.json"
+DATAREF_FILE = DATAREF_DIR / "minhlongmoto-com.json"
 
 CATEGORY_RULES = [
     ("electric", ["xe-dien", "dat-bike", "vinfast", "honda-icon", "yamaha-neos", "quantum"]),

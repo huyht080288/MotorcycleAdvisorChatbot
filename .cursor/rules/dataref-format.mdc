@@ -1,12 +1,12 @@
 ---
 description: Định dạng file DataRef JSON và quy ước dữ liệu
-globs: DataRef/**/*
+globs: src/DataRef/**/*
 alwaysApply: false
 ---
 
 # DataRef JSON Format
 
-Mỗi file trong `DataRef/` tuân theo schema:
+Mỗi file trong `src/DataRef/` tuân theo schema:
 
 ```json
 {
@@ -38,7 +38,8 @@ Admin chọn nhiều file → backend gộp `entries` → train một model duy 
 ## Công cụ tạo file
 
 ```bash
-python -m tools.url_to_json https://minhlongmoto.com/ --output DataRef/minhlong.json
+# PYTHONPATH=src (Windows: $env:PYTHONPATH = "src")
+python -m tools.url_to_json https://minhlongmoto.com/ --output src/DataRef/minhlong.json
 ```
 
 Output phải validate schema trước khi commit.

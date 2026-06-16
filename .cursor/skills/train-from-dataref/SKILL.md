@@ -8,9 +8,9 @@ description: Train AI từ nhiều file DataRef JSON qua admin UI hoặc API. D�
 ## Luồng Admin
 
 1. Đăng nhập tại `/admin.html`
-2. Chọn **nhiều** file JSON từ `DataRef/`
+2. Chọn **nhiều** file JSON từ `src/DataRef/`
 3. Bấm **Train**
-4. Backend gộp `entries` → rebuild TF-IDF → lưu `data/model/`
+4. Backend gộp `entries` → rebuild TF-IDF → lưu `src/data/model/`
 
 ## API
 
@@ -30,6 +30,6 @@ Header sau login: `Authorization: Bearer <token>`
 
 ## Code liên quan
 
-- `backend/ingest/json_loader.py` — đọc & gộp JSON
-- `backend/ai/vectorizer.py` — train & lưu model
-- `backend/api/admin.py` — endpoint train
+- `src/backend/ingest/json_loader.py` — đọc & gộp JSON
+- `src/backend/ai/vectorizer.py` — train & lưu model
+- `src/backend/api/admin.py` — endpoint train

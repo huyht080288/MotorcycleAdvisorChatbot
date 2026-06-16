@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -7,11 +6,9 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.api import admin, chat, site
 from backend.ai.vectorizer import model
+from backend.paths import ENV_FILE, FRONTEND_DIR
 
-load_dotenv()
-
-ROOT = Path(__file__).resolve().parents[1]
-FRONTEND_DIR = ROOT / "frontend"
+load_dotenv(ENV_FILE)
 
 app = FastAPI(title="Motorcycle Advisor Chatbot", version="1.0.0")
 app.include_router(chat.router)

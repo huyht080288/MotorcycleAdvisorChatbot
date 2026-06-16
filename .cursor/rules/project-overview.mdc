@@ -10,25 +10,28 @@ Chatbot tư vấn xe máy cho cửa hàng. Repo: `motorcycle-advisor-chatbot`.
 ## Stack
 
 - Backend: Python 3.11+, FastAPI
-- AI: scikit-learn TF-IDF + Cosine Similarity (tự triển khai trong `backend/ai/`)
+- AI: scikit-learn TF-IDF + Cosine Similarity (tự triển khai trong `src/backend/ai/`)
 - Frontend: HTML/CSS/JS thuần, 100% tiếng Việt
-- Công cụ scrape: CLI `python -m tools.url_to_json`
+- Công cụ scrape: CLI `python -m tools.url_to_json` (chạy với `PYTHONPATH=src`)
 
 ## Ràng buộc quan trọng
 
-- **Cấm** gọi OpenAI/Gemini/Claude hoặc LLM thương mại trong luồng chat/inference (`backend/ai/`, `api/chat`).
-- **Được** dùng AI thị trường chỉ trong `tools/` khi chuyển URL → JSON (nếu cần).
-- Dữ liệu train chỉ từ `DataRef/*.json`.
+- **Cấm** gọi OpenAI/Gemini/Claude hoặc LLM thương mại trong luồng chat/inference (`src/backend/ai/`, `api/chat`).
+- **Được** dùng AI thị trường chỉ trong `src/tools/` khi chuyển URL → JSON (nếu cần).
+- Dữ liệu train chỉ từ `src/DataRef/*.json`.
 - Admin train: chọn **nhiều** file JSON → gộp `entries` → rebuild model.
 
 ## Cấu trúc thư mục
 
 ```
-DataRef/          # JSON train data
-tools/            # CLI url → JSON (độc lập)
-backend/          # API + AI engine
-frontend/         # Chat guest + admin
-data/model/       # Model đã train (joblib)
+src/
+  DataRef/        # JSON train data
+  data/model/     # Model đã train (joblib)
+  tools/          # CLI url → JSON
+  backend/        # API + AI engine
+  frontend/       # Chat guest + admin
+  .env            # Cấu hình runtime
+  requirements.txt
 ```
 
 ## Quy ước code

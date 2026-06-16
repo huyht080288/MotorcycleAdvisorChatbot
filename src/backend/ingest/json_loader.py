@@ -1,10 +1,8 @@
 from dataclasses import dataclass
-from pathlib import Path
 import json
+from pathlib import Path
 
-
-ROOT = Path(__file__).resolve().parents[2]
-DATAREF_DIR = ROOT / "DataRef"
+from backend.paths import DATAREF_DIR
 
 
 @dataclass

@@ -6,8 +6,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from backend.ai.preprocessor import preprocess
 from backend.ingest.json_loader import KnowledgeEntry, entry_to_document
+from backend.paths import MODEL_DIR
 
-MODEL_DIR = Path(__file__).resolve().parents[2] / "data" / "model"
 VECTORIZER_PATH = MODEL_DIR / "vectorizer.joblib"
 KNOWLEDGE_PATH = MODEL_DIR / "knowledge.joblib"
 MATRIX_PATH = MODEL_DIR / "matrix.joblib"
