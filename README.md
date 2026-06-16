@@ -84,10 +84,12 @@ docker compose down             # stop and remove containers
 docker compose up --build -d    # rebuild after code changes
 ```
 
-**Persisted data** (mounted from host):
+**Persisted data:**
 
-- `src/DataRef/` — training JSON files
-- `src/data/model/` — trained model after Admin → Train
+- Model sau Train lưu trong Docker volume `model_data` (không mất khi restart container)
+- `src/DataRef/` được COPY vào image lúc build. Sau khi sửa JSON trên máy host, chạy `docker compose up --build -d`
+
+> Trên Windows, không bind-mount trực tiếp `./src/DataRef` hoặc `./src/data/model` vì dễ gây treo API Admin.
 
 ---
 

@@ -37,6 +37,13 @@ async function loadFiles() {
       showLoginUI();
       return;
     }
+    if (!res.ok) {
+      fileList.innerHTML =
+        "<p class='error'>Không tải được danh sách file (lỗi " +
+        res.status +
+        "). Thử đăng xuất và đăng nhập lại.</p>";
+      return;
+    }
     const data = await res.json();
     if (!data.files.length) {
       fileList.innerHTML = "<p>Chưa có file JSON trong DataRef/.</p>";

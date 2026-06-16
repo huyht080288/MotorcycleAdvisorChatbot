@@ -3,11 +3,11 @@ services:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
+    init: true
     env_file:
       - src/.env
     volumes:
-      - ./src/DataRef:/app/src/DataRef
-      - ./src/data/model:/app/src/data/model
+      - model_data:/app/src/data/model
     expose:
       - "8000"
     restart: unless-stopped
@@ -21,3 +21,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  model_data:
