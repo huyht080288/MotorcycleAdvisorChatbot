@@ -42,6 +42,55 @@ Then open http://localhost:8000/admin.html → login `admin` / `admin123` → se
 
 ---
 
+## Running with Docker
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine + Compose).
+
+### Step 1 — Prepare config
+
+```powershell
+copy src\.env.example src\.env
+```
+
+### Step 2 — Build and start
+
+```powershell
+docker compose up --build -d
+```
+
+| Service | Role | Host access |
+|---------|------|-------------|
+| `frontend` | Nginx serves UI, proxies `/api` | http://localhost:8081 |
+| `backend` | FastAPI + TF-IDF engine | internal only (port 8000) |
+
+### Step 3 — Train and use
+
+1. http://localhost:8081/admin.html → login `admin` / `admin123`
+2. Select JSON file(s) → **Train**
+3. http://localhost:8081 → chat
+
+| Page | URL |
+|------|-----|
+| Homepage + chat | http://localhost:8081 |
+| Admin | http://localhost:8081/admin.html |
+| API docs | http://localhost:8081/docs |
+
+### Useful commands
+
+```powershell
+docker compose logs -f          # view logs
+docker compose ps               # container status
+docker compose down             # stop and remove containers
+docker compose up --build -d    # rebuild after code changes
+```
+
+**Persisted data** (mounted from host):
+
+- `src/DataRef/` — training JSON files
+- `src/data/model/` — trained model after Admin → Train
+
+---
+
 ## Running the Source (Windows / PowerShell)
 
 ### Step 1 — Open the project directory
@@ -239,6 +288,9 @@ All application source code and config live under `src/`:
 
 ```
 motorcycle-advisor-chatbot/
+├── docker/
+│   ├── backend/Dockerfile   # FastAPI image
+│   └── frontend/            # Nginx image + nginx.conf
 ├── src/
 │   ├── backend/          # FastAPI + TF-IDF engine
 │   ├── frontend/         # Web UI
@@ -247,6 +299,7 @@ motorcycle-advisor-chatbot/
 │   ├── data/model/       # Trained model (*.joblib)
 │   ├── .env.example      # Config template
 │   └── requirements.txt
+├── docker-compose.yml    # Run backend + frontend (port 8081)
 ├── Report/               # Project report
 ├── run.ps1               # Start server (PowerShell)
 ├── run.bat               # Start server (CMD)
@@ -279,9 +332,20 @@ Details: `Report/NHOM12_PHATTRIENHETHONGTHONGMINH.md`
 
 ## Suggested Workflow
 
+**Local development:**
+
 ```text
 1. PYTHONPATH=src  python -m tools.url_to_json <URL>  →  src/DataRef/*.json
 2. .\run.ps1                                         →  start server
 3. Admin → Train                                     →  build model
 4. Homepage → chat                                   →  verify results
+```
+
+**Docker:**
+
+```text
+1. copy src/.env.example → src/.env
+2. docker compose up --build -d                      →  http://localhost:8081
+3. Admin → Train
+4. Homepage → chat
 ```
