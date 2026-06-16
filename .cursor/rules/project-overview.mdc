@@ -1,0 +1,38 @@
+---
+description: Tổng quan dự án motorcycle-advisor-chatbot
+alwaysApply: true
+---
+
+# Motorcycle Advisor Chatbot
+
+Chatbot tư vấn xe máy cho cửa hàng. Repo: `motorcycle-advisor-chatbot`.
+
+## Stack
+
+- Backend: Python 3.11+, FastAPI
+- AI: scikit-learn TF-IDF + Cosine Similarity (tự triển khai trong `backend/ai/`)
+- Frontend: HTML/CSS/JS thuần, 100% tiếng Việt
+- Công cụ scrape: CLI `python -m tools.url_to_json`
+
+## Ràng buộc quan trọng
+
+- **Cấm** gọi OpenAI/Gemini/Claude hoặc LLM thương mại trong luồng chat/inference (`backend/ai/`, `api/chat`).
+- **Được** dùng AI thị trường chỉ trong `tools/` khi chuyển URL → JSON (nếu cần).
+- Dữ liệu train chỉ từ `DataRef/*.json`.
+- Admin train: chọn **nhiều** file JSON → gộp `entries` → rebuild model.
+
+## Cấu trúc thư mục
+
+```
+DataRef/          # JSON train data
+tools/            # CLI url → JSON (độc lập)
+backend/          # API + AI engine
+frontend/         # Chat guest + admin
+data/model/       # Model đã train (joblib)
+```
+
+## Quy ước code
+
+- UI/message: tiếng Việt
+- Tên biến/hàm/module: tiếng Anh
+- Giữ scope nhỏ; không thêm framework UI phức tạp

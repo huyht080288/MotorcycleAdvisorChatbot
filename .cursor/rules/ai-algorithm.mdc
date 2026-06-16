@@ -1,0 +1,37 @@
+---
+description: Thuật toán AI và luồng train/inference
+globs: backend/ai/**/*
+alwaysApply: false
+---
+
+# Thuật toán AI
+
+## Inference (bắt buộc)
+
+1. Tiền xử lý câu hỏi (`preprocessor.py`): lowercase, chuẩn hóa khoảng trắng
+2. Vector hóa TF-IDF (`vectorizer.py`): `sklearn.feature_extraction.text.TfidfVectorizer`
+3. So khớp (`matcher.py`): cosine similarity, trả entry có điểm cao nhất
+4. Ngưỡng tin cậy mặc định `0.25` — dưới ngưỡng trả câu fallback tiếng Việt
+
+## Train
+
+- Input: danh sách file `DataRef/*.json` (admin chọn nhiều file)
+- Gộp tất cả `entries` từ các file
+- Vector hóa trên text = `question + " " + answer`
+- Lưu `data/model/vectorizer.joblib` và `data/model/knowledge.joblib`
+
+## Cấm
+
+- Không gọi API LLM trong `backend/ai/` hoặc `api/chat.py`
+- Không thay TF-IDF bằng embedding API hoặc pre-trained LLM cho inference
+
+## Ví dụ matching
+
+```python
+# Text đưa vào vectorizer khi train
+doc = f"{entry['question']} {entry['answer']}"
+
+# Khi inference
+scores = cosine_similarity(query_vec, doc_matrix)
+best_idx = scores.argmax()
+```

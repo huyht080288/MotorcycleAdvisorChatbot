@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị - Train AI</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Quản trị hệ thống</h1>
+      <p>Đăng nhập admin để train AI từ file DataRef.</p>
+    </header>
+
+    <section id="loginSection" class="card">
+      <h2>Đăng nhập</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Tài khoản</label>
+          <input id="username" type="text" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <input id="password" type="password" required>
+        </div>
+        <button type="submit">Đăng nhập</button>
+        <p id="loginError" class="error hidden"></p>
+      </form>
+    </section>
+
+    <section id="trainSection" class="card hidden">
+      <h2>Train AI</h2>
+      <p>Chọn một hoặc nhiều file JSON trong thư mục DataRef:</p>
+      <div id="fileList" class="file-list"></div>
+      <button id="trainBtn" type="button" style="margin-top: 12px;">Train</button>
+      <button id="logoutBtn" type="button" class="secondary" style="margin-top: 12px; margin-left: 8px;">Đăng xuất</button>
+      <div id="trainStatus" class="status hidden"></div>
+    </section>
+
+    <a class="nav-link" href="/index.html">← Về trang chat</a>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

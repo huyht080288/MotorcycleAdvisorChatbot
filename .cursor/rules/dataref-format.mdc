@@ -1,0 +1,44 @@
+---
+description: Định dạng file DataRef JSON và quy ước dữ liệu
+globs: DataRef/**/*
+alwaysApply: false
+---
+
+# DataRef JSON Format
+
+Mỗi file trong `DataRef/` tuân theo schema:
+
+```json
+{
+  "source": "https://example.com/",
+  "scraped_at": "2026-06-16T10:00:00",
+  "entries": [
+    {
+      "id": "unique-slug",
+      "question": "Câu hỏi mẫu",
+      "answer": "Nội dung trả lời",
+      "tags": ["tag1", "tag2"],
+      "source_url": "https://example.com/page"
+    }
+  ]
+}
+```
+
+## Quy tắc
+
+- `id`: unique trong phạm vi file; slug lowercase, dấu gạch ngang
+- `question` + `answer`: bắt buộc, không rỗng
+- `tags`, `source_url`: tùy chọn
+- Đặt tên file: `{nguon}-{chu-de}.json` (vd. `minhlong-products.json`)
+
+## Train nhiều file
+
+Admin chọn nhiều file → backend gộp `entries` → train một model duy nhất.
+
+## Công cụ tạo file
+
+```bash
+python -m tools.url_to_json https://minhlongmoto.com/ --output DataRef/minhlong.json
+```
+
+Output phải validate schema trước khi commit.

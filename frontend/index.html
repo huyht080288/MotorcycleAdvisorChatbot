@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minh Long Motor — Tư vấn xe máy & xe điện</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="brand">
+        <span class="brand-icon">🏍️</span>
+        <div>
+          <strong id="storeName">Minh Long Motor</strong>
+          <small>Xe máy & xe điện chính hãng</small>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="#featured">Xe nổi bật</a>
+        <a href="#promotions">Khuyến mãi</a>
+        <a href="#services">Dịch vụ</a>
+        <a href="#branches">Chi nhánh</a>
+        <a href="#" id="navOpenChat">Tư vấn AI</a>
+      </nav>
+      <a class="btn btn-outline header-admin" href="/admin.html">Quản trị</a>
+    </div>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="hero-badge">Tư vấn trực tuyến 24/7</span>
+        <h1 id="heroTitle">Minh Long Motor</h1>
+        <p id="heroSubtitle">Cửa hàng xe máy & xe điện chính hãng — giá tốt, tư vấn tận tâm</p>
+        <ul id="heroHighlights" class="hero-highlights"></ul>
+        <div class="hero-actions">
+          <a href="#" id="heroOpenChat" class="btn btn-primary">Chat tư vấn ngay</a>
+          <a href="#featured" class="btn btn-ghost">Xem xe nổi bật</a>
+        </div>
+        <p class="hero-hotline">Hotline: <strong id="hotline">0786.0000.36</strong></p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-num" id="statEntries">—</span>
+          <span class="stat-label">Thông tin xe & dịch vụ</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">7</span>
+          <span class="stat-label">Chi nhánh</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">AI</span>
+          <span class="stat-label">Tư vấn tức thì</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section categories-section">
+    <div class="container-wide">
+      <h2 class="section-title">Danh mục tư vấn</h2>
+      <p class="section-desc">Chọn chủ đề để bắt đầu hỏi chatbot</p>
+      <div id="categoryGrid" class="category-grid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="featured">
+    <div class="container-wide">
+      <h2 class="section-title">Xe nổi bật</h2>
+      <div id="featuredGrid" class="product-grid"></div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="promotions">
+    <div class="container-wide">
+      <h2 class="section-title">Khuyến mãi</h2>
+      <div id="promoGrid" class="promo-grid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="container-wide">
+      <h2 class="section-title">Dịch vụ khi mua xe</h2>
+      <div id="serviceGrid" class="service-grid"></div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="branches">
+    <div class="container-wide">
+      <h2 class="section-title">Hệ thống chi nhánh</h2>
+      <p class="section-desc">Thời gian làm việc: 7h30 – 20h (Thứ 2 – Chủ nhật)</p>
+      <div id="branchGrid" class="branch-grid"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container-wide footer-inner">
+      <div>
+        <strong>Minh Long Motor</strong>
+        <p>Chatbot tư vấn — dự án motorcycle-advisor-chatbot</p>
+      </div>
+      <div>
+        <a href="https://minhlongmoto.com/" target="_blank" rel="noopener">minhlongmoto.com</a>
+        <span> · </span>
+        <a href="/admin.html">Đăng nhập quản trị</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="chatWidget" class="chat-widget">
+    <div id="chatPanel" class="chat-panel">
+      <div class="chat-panel-header">
+        <span class="chat-status-dot"></span>
+        <span class="chat-panel-title">Trợ lý tư vấn AI</span>
+        <button type="button" id="chatMinimize" class="chat-header-btn" title="Thu gọn">−</button>
+      </div>
+      <div id="quickQuestions" class="quick-questions"></div>
+      <div id="chatBox" class="chat-box"></div>
+      <form id="chatForm" class="chat-input">
+        <input id="messageInput" type="text" placeholder="Nhập câu hỏi..." autocomplete="off" required>
+        <button type="submit">Gửi</button>
+      </form>
+    </div>
+    <button id="chatToggle" class="chat-toggle" type="button" title="Mở chat tư vấn">
+      <span class="chat-toggle-icon">💬</span>
+      <span class="chat-toggle-label">Tư vấn AI</span>
+    </button>
+  </div>
+
+  <script src="/js/site.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

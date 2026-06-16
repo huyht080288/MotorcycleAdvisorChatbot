@@ -1,0 +1,41 @@
+{
+  "source": "sample-manual",
+  "scraped_at": "2026-06-16T00:00:00+00:00",
+  "entries": [
+    {
+      "id": "vario-125-gia",
+      "question": "Giá xe Honda Vario 125 2026 bao nhiêu?",
+      "answer": "Honda Vario 125 thế hệ mới có giá cập nhật theo từng phiên bản và thời điểm. Bạn liên hệ Minh Long Motor để được báo giá chính xác nhất.",
+      "tags": ["Honda", "Vario 125", "giá"],
+      "source_url": "https://minhlongmoto.com/"
+    },
+    {
+      "id": "dich-vu-bao-duong",
+      "question": "Cửa hàng có dịch vụ bảo dưỡng xe không?",
+      "answer": "Minh Long Motor có chương trình tặng nhớt và ưu đãi bảo dưỡng lớn khi mua xe. Liên hệ chi nhánh gần nhất để được tư vấn chi tiết.",
+      "tags": ["bảo dưỡng", "dịch vụ"],
+      "source_url": "https://minhlongmoto.com/"
+    },
+    {
+      "id": "dia-chi-di-an",
+      "question": "Địa chỉ cửa hàng Minh Long Motor ở Dĩ An?",
+      "answer": "Chi nhánh Dĩ An - Bình Dương: Số 27 Đường M, khu phố Nhị Đồng 2, Phường Dĩ An, TP HCM (Bình Dương).",
+      "tags": ["địa chỉ", "Dĩ An"],
+      "source_url": "https://minhlongmoto.com/"
+    },
+    {
+      "id": "xe-dien-dat-bike",
+      "question": "Có xe điện Dat Bike không?",
+      "answer": "Minh Long Motor có nhiều mẫu xe điện như Dat Bike Quantum, Era và các dòng xe điện khác. Quãng đường và giá tùy từng model.",
+      "tags": ["xe điện", "Dat Bike"],
+      "source_url": "https://minhlongmoto.com/"
+    },
+    {
+      "id": "dang-ky-bien-so",
+      "question": "Mua xe có hỗ trợ đăng ký biển số không?",
+      "answer": "Có. Minh Long Motor hỗ trợ dịch vụ đăng ký biển số xe khi khách mua xe tại cửa hàng.",
+      "tags": ["đăng ký biển", "dịch vụ"],
+      "source_url": "https://minhlongmoto.com/"
+    }
+  ]
+}
