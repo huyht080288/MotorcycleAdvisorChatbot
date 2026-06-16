@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant A as Admin
+    participant API as /api/admin/login
+    participant T as JWT
+    participant Train as /api/admin/train
+
+    A->>API: username + password
+    API->>API: So khớp .env
+    API-->>A: token
+    A->>Train: Authorization: Bearer token
+    Train->>T: Verify JWT + role admin
+    T-->>Train: OK
+    Train-->>A: Train thành công

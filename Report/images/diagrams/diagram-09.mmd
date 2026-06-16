@@ -1,0 +1,8 @@
+flowchart LR
+    A[URL gốc] --> B[requests GET HTML]
+    B --> C[BeautifulSoup parse]
+    C --> D[Trích title + nội dung]
+    D --> E[Tạo question/answer]
+    E --> F[Thu thập link cùng domain]
+    F --> B
+    D --> G[Ghi src/DataRef/*.json]

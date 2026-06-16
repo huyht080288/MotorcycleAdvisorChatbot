@@ -1,0 +1,37 @@
+flowchart TB
+    subgraph Client["Trình duyệt (Client)"]
+        UI[Trang chủ Minh Long Motor]
+        Chat[Widget Chat AI]
+        Admin[Trang Admin]
+    end
+
+    subgraph Server["Backend (FastAPI)"]
+        API_Chat["/api/chat"]
+        API_Admin["/api/admin/*"]
+        API_Site["/api/site-content"]
+        AI[ChatbotModel<br/>TF-IDF + Cosine]
+        Loader[json_loader.py]
+    end
+
+    subgraph Data["Dữ liệu"]
+        JSON[src/DataRef/*.json]
+        Model[src/data/model/*.joblib]
+    end
+
+    subgraph Tools["Công cụ CLI"]
+        Scraper[src/tools/url_to_json.py]
+    end
+
+    URL[minhlongmoto.com] --> Scraper
+    Scraper --> JSON
+
+    UI --> API_Site
+    Chat --> API_Chat
+    Admin --> API_Admin
+
+    API_Admin --> Loader
+    Loader --> JSON
+    API_Admin --> AI
+    API_Chat --> AI
+    AI --> Model
+    API_Site --> JSON

@@ -1,0 +1,13 @@
+flowchart TB
+    subgraph Train["Giai đoạn Train"]
+        J[json_loader.py] --> V[vectorizer.py<br/>fit_transform]
+    end
+
+    subgraph Inference["Giai đoạn Inference"]
+        P[preprocessor.py] --> V2[vectorizer.py<br/>transform + cosine]
+    end
+
+    subgraph API["API Layer"]
+        C[chat.py] --> V2
+        A[admin.py] --> J
+    end

@@ -642,12 +642,30 @@ flowchart TB
 
 ### 9.5. Hình ảnh minh họa giao diện
 
-Báo cáo kèm các hình chụp màn hình sau (chèn khi in bản cứng hoặc nộp file PDF):
+#### A. Giao diện hệ thống chatbot (chụp màn hình khi chạy thử)
 
-- **Hình 1:** Trang chủ — phần Hero và xe nổi bật
-- **Hình 2:** Widget chat đang mở với câu trả lời và % tin cậy
-- **Hình 3:** Trang Admin — màn hình Train
-- **Hình 4:** Kết quả chat hỏi về giá xe / địa chỉ cửa hàng
+#### Hình 1 — Trang chủ: Hero, danh mục và xe nổi bật
+
+![Trang chủ hệ thống chatbot — Hero và danh sách xe nổi bật](images/ui-01-homepage.png)
+
+#### Hình 2 — Widget chat AI (góc dưới phải)
+
+![Widget chat AI với câu hỏi gợi ý và lời chào khách](images/ui-02-chat.png)
+
+#### Hình 3 — Trang Admin: đăng nhập và Train
+
+![Trang quản trị — đăng nhập và chọn file JSON để Train](images/ui-03-admin.png)
+
+#### B. Hình ảnh thực tế từ website [minhlongmoto.com](https://minhlongmoto.com/)
+
+Các ảnh dưới đây lấy từ website cửa hàng gốc, dùng minh họa nội dung tư vấn (xe, khuyến mãi, nhận diện thương hiệu):
+
+| Ảnh | Mô tả |
+|-----|--------|
+| ![Dat Bike Quantum S2](images/product-quantum-s2.jpg) | Dat Bike Quantum S2 — xe điện |
+| ![Khuyến mãi VinFast](images/product-vinfast-km.jpg) | Chương trình khuyến mãi VinFast |
+| ![TVS Ntorq 125](images/product-tvs-ntorq.jpg) | Khuyến mãi TVS Ntorq 125 |
+| ![Logo Minh Long Motor](images/logo-minhlong.png) | Logo Minh Long Motor |
 
 ---
 

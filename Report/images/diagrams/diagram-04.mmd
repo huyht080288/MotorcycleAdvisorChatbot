@@ -1,0 +1,8 @@
+flowchart LR
+    A[Dữ liệu train<br/>src/DataRef JSON] --> B[Vector hóa TF-IDF]
+    B --> C[Ma trận knowledge]
+    D[Câu hỏi khách] --> E[Tiền xử lý]
+    E --> F[Vector hóa câu hỏi]
+    F --> G[Cosine Similarity]
+    C --> G
+    G --> H[Câu trả lời khớp nhất]

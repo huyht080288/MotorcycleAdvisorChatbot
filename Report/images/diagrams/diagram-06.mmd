@@ -1,0 +1,10 @@
+flowchart TD
+    A[Admin đăng nhập] --> B[Chọn nhiều file src/DataRef/*.json]
+    B --> C[POST /api/admin/train]
+    C --> D[json_loader: gộp entries]
+    D --> E[Tạo document = question + answer]
+    E --> F[TfidfVectorizer.fit_transform]
+    F --> G[Lưu vectorizer.joblib]
+    G --> H[Lưu knowledge.joblib]
+    H --> I[Lưu matrix.joblib]
+    I --> J[Model sẵn sàng cho chat]

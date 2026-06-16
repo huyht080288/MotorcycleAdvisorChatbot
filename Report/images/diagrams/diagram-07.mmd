@@ -1,0 +1,10 @@
+flowchart TD
+    Q[Câu hỏi khách hàng] --> P[preprocess<br/>lowercase, chuẩn hóa Unicode]
+    P --> V[vectorizer.transform]
+    V --> C[cosine_similarity với ma trận train]
+    C --> M{Tìm index<br/>điểm cao nhất}
+    M --> T{score >= 0.25?}
+    T -->|Có| A[Trả answer của entry khớp nhất]
+    T -->|Không| F[Trả câu fallback<br/>chưa có thông tin]
+    A --> R[Response: reply, confidence, matched_question]
+    F --> R

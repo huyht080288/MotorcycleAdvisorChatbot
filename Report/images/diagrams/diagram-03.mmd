@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant U as Người dùng
+    participant F as Frontend
+    participant B as FastAPI
+    participant M as Model TF-IDF
+
+    U->>F: Nhập câu hỏi
+    F->>B: POST /api/chat {message}
+    B->>M: predict(question)
+    M->>M: preprocess → vectorize → cosine
+    M-->>B: answer, confidence
+    B-->>F: JSON response
+    F-->>U: Hiển thị câu trả lời

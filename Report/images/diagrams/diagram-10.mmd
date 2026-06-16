@@ -1,0 +1,10 @@
+flowchart LR
+    Guest((Khách hàng))
+    Admin((Quản trị viên))
+    System[Hệ thống Chatbot]
+
+    Guest -->|Chat hỏi đáp| System
+    Guest -->|Xem thông tin xe| System
+    Admin -->|Đăng nhập| System
+    Admin -->|Train từ JSON| System
+    Admin -->|Scrape URL CLI| System
