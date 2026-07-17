@@ -1,180 +1,220 @@
 const CATEGORY_LABELS = {
   electric: "Xe điện",
-  petrol: "Xe xăng",
+  petrol: "Xe máy",
   promo: "Khuyến mãi",
   fifty_cc: "Xe 50cc",
   service: "Dịch vụ",
-  contact: "Liên hệ",
   price: "Bảng giá",
   news: "Tin tức",
 };
 
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text || "";
-  return div.innerHTML;
+function createElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
 }
 
-function renderCategories(categories) {
+function renderCategories(categories = []) {
   const grid = document.getElementById("categoryGrid");
-  grid.innerHTML = categories
-    .map(
-      (cat) => `
-      <button type="button" class="category-card" data-question="${escapeHtml(cat.question)}">
-        <span class="category-icon">${cat.icon}</span>
-        <span class="category-label">${escapeHtml(cat.label)}</span>
-      </button>`
-    )
-    .join("");
-
-  grid.querySelectorAll(".category-card").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const q = btn.dataset.question;
-      if (window.askChatbot) window.askChatbot(q);
-    });
-  });
+  grid.replaceChildren(...categories.map((category) => {
+    const link = createElement("a", "category-card");
+    link.href = `#${category.target}`;
+    const image = createElement("img", "category-image");
+    image.src = category.image;
+    image.alt = "";
+    image.loading = "lazy";
+    link.append(
+      image,
+      createElement("span", "category-shade"),
+      createElement("span", "category-icon", category.icon),
+      createElement("span", "category-label", category.label),
+      createElement("small", "", `${category.count || 0} nội dung`)
+    );
+    return link;
+  }));
 }
 
-function renderProductCard(item, variant = "product") {
-  const price = item.price
-    ? `<span class="card-price">${escapeHtml(item.price)}</span>`
-    : "";
-  const cat = CATEGORY_LABELS[item.category] || "";
-  return `
-    <article class="card ${variant}-card" data-question="${escapeHtml(item.question)}">
-      <span class="card-tag">${escapeHtml(cat)}</span>
-      <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.summary)}</p>
-      ${price}
-      <button type="button" class="card-ask-btn">Hỏi chatbot</button>
-    </article>`;
+function createProductCard(item, compact = false) {
+  const card = createElement("article", `product-card${compact ? " compact" : ""}`);
+  const media = createElement("div", `product-media brand-${(item.brand || "other").toLowerCase().replace(/\s+/g, "-")}`);
+
+  if (item.image) {
+    const image = createElement("img");
+    image.src = item.image;
+    image.alt = item.title;
+    image.loading = "lazy";
+    media.append(image);
+  } else {
+    media.append(
+      createElement("span", "media-brand", item.brand || "Minh Long"),
+      createElement("span", "media-bike", item.category === "electric" ? "⚡" : "🏍️")
+    );
+  }
+  if (item.badge) media.append(createElement("span", "product-badge", item.badge));
+
+  const body = createElement("div", "product-body");
+  const meta = createElement("div", "product-meta");
+  meta.append(
+    createElement("span", "", item.brand || "Minh Long"),
+    createElement("span", "", CATEGORY_LABELS[item.category] || "")
+  );
+  body.append(meta, createElement("h3", "", item.title));
+  if (!compact) body.append(createElement("p", "", item.summary));
+  body.append(createElement("strong", "card-price", item.price ? `Từ ${item.price}` : "Liên hệ"));
+
+  const actions = createElement("div", "card-actions");
+  const detail = createElement("a", "detail-link", "Xem chi tiết");
+  detail.href = item.source_url || "#";
+  detail.target = item.source_url ? "_blank" : "";
+  detail.rel = item.source_url ? "noopener" : "";
+  const ask = createElement("button", "card-ask-btn", "Tư vấn");
+  ask.type = "button";
+  ask.addEventListener("click", () => window.askChatbot?.(item.question));
+  actions.append(detail, ask);
+  body.append(actions);
+  card.append(media, body);
+  return card;
 }
 
-function bindCardAskButtons(container) {
-  container.querySelectorAll("[data-question]").forEach((card) => {
-    const ask = () => {
-      if (window.askChatbot) window.askChatbot(card.dataset.question);
-    };
-    card.querySelector(".card-ask-btn")?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      ask();
-    });
-    card.addEventListener("click", ask);
-  });
-}
-
-function renderFeatured(items) {
-  const grid = document.getElementById("featuredGrid");
+function renderProducts(containerId, items = [], compact = false) {
+  const grid = document.getElementById(containerId);
   if (!items.length) {
-    grid.innerHTML = "<p class='empty-note'>Chưa có dữ liệu xe nổi bật.</p>";
+    grid.replaceChildren(createElement("p", "empty-note", "Nội dung đang được cập nhật."));
     return;
   }
-  grid.innerHTML = items.map((item) => renderProductCard(item)).join("");
-  bindCardAskButtons(grid);
+  grid.replaceChildren(...items.map((item) => createProductCard(item, compact)));
 }
 
-function renderPromos(items) {
-  const grid = document.getElementById("promoGrid");
-  if (!items.length) {
-    grid.innerHTML = "<p class='empty-note'>Chưa có khuyến mãi.</p>";
-    return;
-  }
-  grid.innerHTML = items.map((item) => renderProductCard(item, "promo")).join("");
-  bindCardAskButtons(grid);
+function renderBrands(brands = []) {
+  const list = document.getElementById("brandList");
+  list.replaceChildren(...brands.map((brand) => createElement("span", "brand-pill", brand)));
 }
 
-function renderServices(services) {
+function renderServices(services = []) {
   const grid = document.getElementById("serviceGrid");
-  grid.innerHTML = services
-    .map(
-      (s) => `
-    <article class="card service-card" data-question="${escapeHtml(s.question)}">
-      <h3>${escapeHtml(s.title)}</h3>
-      <p>${escapeHtml(s.description)}</p>
-      <button type="button" class="card-ask-btn">Tư vấn thêm</button>
-    </article>`
-    )
-    .join("");
-  bindCardAskButtons(grid);
+  grid.replaceChildren(...services.map((service) => {
+    const card = createElement("article", "service-card");
+    card.append(
+      createElement("span", "service-icon", service.icon),
+      createElement("h3", "", service.title),
+      createElement("p", "", service.description)
+    );
+    const button = createElement("button", "service-link", "Tìm hiểu thêm →");
+    button.type = "button";
+    button.addEventListener("click", () => window.askChatbot?.(service.question));
+    card.append(button);
+    return card;
+  }));
 }
 
-function renderBranches(branches) {
+function renderNews(items = []) {
+  const grid = document.getElementById("newsGrid");
+  if (!items.length) {
+    grid.replaceChildren(createElement("p", "empty-note", "Tin tức đang được cập nhật."));
+    return;
+  }
+  grid.replaceChildren(...items.map((item, index) => {
+    const article = createElement("article", `news-card${index === 0 ? " news-featured" : ""}`);
+    const visual = createElement("div", "news-visual");
+    if (item.image) visual.style.backgroundImage = `url("${item.image}")`;
+    visual.append(createElement("span", "", item.brand), createElement("b", "", "TIN XE"));
+    const content = createElement("div", "news-content");
+    content.append(createElement("span", "news-tag", "Tin mới"), createElement("h3", "", item.title));
+    if (index === 0) content.append(createElement("p", "", item.summary));
+    const link = createElement("a", "text-link", "Đọc bài viết →");
+    link.href = item.source_url;
+    link.target = "_blank";
+    link.rel = "noopener";
+    content.append(link);
+    article.append(visual, content);
+    return article;
+  }));
+}
+
+function renderBranches(branches = []) {
   const grid = document.getElementById("branchGrid");
-  grid.innerHTML = branches
-    .map(
-      (b) => `
-    <article class="card branch-card">
-      <h3>${escapeHtml(b.name)}</h3>
-      <p>${escapeHtml(b.address)}</p>
-      <button type="button" class="card-ask-btn branch-ask" data-question="Địa chỉ cửa hàng ${escapeHtml(b.name)}?">
-        Hỏi đường đi
-      </button>
-    </article>`
-    )
-    .join("");
-
-  grid.querySelectorAll(".branch-ask").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (window.askChatbot) window.askChatbot(btn.dataset.question);
-    });
-  });
+  grid.replaceChildren(...branches.map((branch, index) => {
+    const card = createElement("article", "branch-card");
+    const number = createElement("span", "branch-number", String(index + 1).padStart(2, "0"));
+    card.append(number, createElement("h3", "", branch.name), createElement("p", "", branch.address));
+    const phone = createElement("a", "branch-phone", `☎ ${branch.phone}`);
+    phone.href = `tel:${branch.phone.replace(/\D/g, "")}`;
+    const map = createElement("a", "branch-map", "Chỉ đường ↗");
+    map.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.address)}`;
+    map.target = "_blank";
+    map.rel = "noopener";
+    const actions = createElement("div", "branch-actions");
+    actions.append(phone, map);
+    card.append(actions);
+    return card;
+  }));
 }
 
-function renderQuickQuestions(questions) {
+function renderQuickQuestions(questions = []) {
   const wrap = document.getElementById("quickQuestions");
-  wrap.innerHTML = questions
-    .map(
-      (q) =>
-        `<button type="button" class="chip" data-question="${escapeHtml(q)}">${escapeHtml(q)}</button>`
-    )
-    .join("");
-
-  wrap.querySelectorAll(".chip").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      if (window.askChatbot) window.askChatbot(chip.dataset.question);
-    });
-  });
+  wrap.replaceChildren(...questions.map((question) => {
+    const chip = createElement("button", "chip", question);
+    chip.type = "button";
+    chip.addEventListener("click", () => window.askChatbot?.(question));
+    return chip;
+  }));
 }
 
 function renderHero(data) {
   document.getElementById("storeName").textContent = data.store_name;
   document.getElementById("heroTitle").textContent = data.hero.title;
   document.getElementById("heroSubtitle").textContent = data.hero.subtitle;
-  document.getElementById("hotline").textContent = data.hotline;
-  document.getElementById("statEntries").textContent = data.entry_count || "—";
-
   const list = document.getElementById("heroHighlights");
-  list.innerHTML = (data.hero.highlights || [])
-    .map((h) => `<li>${escapeHtml(h)}</li>`)
-    .join("");
+  list.replaceChildren(...(data.hero.highlights || []).map((item) => createElement("li", "", item)));
+}
+
+function showLoadError() {
+  ["featuredGrid", "electricGrid", "petrolGrid", "fiftyGrid", "promoGrid", "newsGrid"].forEach((id) => {
+    document.getElementById(id)?.replaceChildren(
+      createElement("p", "empty-note", "Không tải được nội dung. Vui lòng kiểm tra kết nối backend.")
+    );
+  });
 }
 
 async function loadSiteContent() {
   try {
-    const res = await fetch("/api/site-content");
-    const data = await res.json();
+    const response = await fetch("/api/site-content");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
     renderHero(data);
     renderCategories(data.categories);
-    renderFeatured(data.featured);
-    renderPromos(data.promotions);
+    renderBrands(data.brands);
+    renderProducts("featuredGrid", data.featured);
+    renderProducts("electricGrid", data.collections?.electric, true);
+    renderProducts("petrolGrid", data.collections?.petrol, true);
+    renderProducts("fiftyGrid", data.collections?.fifty_cc, true);
+    renderProducts("promoGrid", data.promotions);
     renderServices(data.services);
+    renderNews(data.news);
     renderBranches(data.branches);
     renderQuickQuestions(data.quick_questions);
   } catch {
-    document.getElementById("featuredGrid").innerHTML =
-      "<p class='empty-note'>Không tải được nội dung. Vui lòng chạy server backend.</p>";
+    showLoadError();
   }
 }
 
-document.getElementById("navOpenChat")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (window.openChatbot) window.openChatbot();
+["navOpenChat", "heroOpenChat", "footerOpenChat"].forEach((id) => {
+  document.getElementById(id)?.addEventListener("click", (event) => {
+    event.preventDefault();
+    window.openChatbot?.();
+  });
 });
 
-document.getElementById("heroOpenChat")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (window.openChatbot) window.openChatbot();
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.querySelector(".main-nav");
+menuToggle?.addEventListener("click", () => {
+  const isOpen = mainNav.classList.toggle("is-open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
 });
+mainNav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+  mainNav.classList.remove("is-open");
+  menuToggle?.setAttribute("aria-expanded", "false");
+}));
 
 loadSiteContent();

@@ -7,105 +7,188 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <div class="topbar">
+    <div class="container-wide topbar-inner">
+      <span>Hệ thống 7 cửa hàng tại TP.HCM & Bình Dương</span>
+      <span>Giờ mở cửa: 7h30 – 20h hằng ngày</span>
+      <a href="tel:0786000036">Hotline: 0786.000.036</a>
+    </div>
+  </div>
   <header class="site-header">
     <div class="header-inner">
       <a href="/" class="brand">
-        <span class="brand-icon">🏍️</span>
+        <img src="/assets/logo-minhlong.png" alt="" class="brand-logo">
         <div>
           <strong id="storeName">Minh Long Motor</strong>
           <small>Xe máy & xe điện chính hãng</small>
         </div>
       </a>
       <nav class="main-nav">
-        <a href="#featured">Xe nổi bật</a>
+        <a href="#categories">Mua xe</a>
+        <a href="#electric">Xe điện</a>
+        <a href="#petrol">Xe máy</a>
         <a href="#promotions">Khuyến mãi</a>
-        <a href="#services">Dịch vụ</a>
         <a href="#branches">Chi nhánh</a>
         <a href="#" id="navOpenChat">Tư vấn AI</a>
       </nav>
-      <a class="btn btn-outline header-admin" href="/admin.html">Quản trị</a>
+      <a class="header-phone" href="tel:0786000036">☎ 0786.000.036</a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Mở menu" aria-expanded="false">☰</button>
     </div>
   </header>
 
   <section class="hero" id="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <span class="hero-badge">Tư vấn trực tuyến 24/7</span>
+        <span class="hero-badge">Ưu đãi mới mỗi tuần</span>
         <h1 id="heroTitle">Minh Long Motor</h1>
         <p id="heroSubtitle">Cửa hàng xe máy & xe điện chính hãng — giá tốt, tư vấn tận tâm</p>
         <ul id="heroHighlights" class="hero-highlights"></ul>
         <div class="hero-actions">
-          <a href="#" id="heroOpenChat" class="btn btn-primary">Chat tư vấn ngay</a>
-          <a href="#featured" class="btn btn-ghost">Xem xe nổi bật</a>
+          <a href="#featured" class="btn btn-primary">Khám phá mẫu xe</a>
+          <a href="#" id="heroOpenChat" class="btn btn-ghost">Chat tư vấn ngay</a>
         </div>
-        <p class="hero-hotline">Hotline: <strong id="hotline">0786.0000.36</strong></p>
       </div>
-      <div class="hero-stats">
-        <div class="stat-card">
-          <span class="stat-num" id="statEntries">—</span>
-          <span class="stat-label">Thông tin xe & dịch vụ</span>
+      <div class="hero-showcase" aria-hidden="true">
+        <div class="showcase-copy">
+          <span>XE ĐIỆN THẾ HỆ MỚI</span>
+          <strong>Đi xa hơn<br>mỗi ngày</strong>
+          <small>Hiệu năng cao · Chi phí tối ưu</small>
         </div>
-        <div class="stat-card">
-          <span class="stat-num">7</span>
-          <span class="stat-label">Chi nhánh</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-num">AI</span>
-          <span class="stat-label">Tư vấn tức thì</span>
-        </div>
+        <img src="/assets/product-quantum-s2.jpg" alt="">
       </div>
     </div>
   </section>
 
-  <section class="section categories-section">
+  <section class="trust-strip">
+    <div class="container-wide trust-grid">
+      <div><b>✓</b><span><strong>Xe chính hãng</strong><small>Nguồn gốc minh bạch</small></span></div>
+      <div><b>₫</b><span><strong>Giá cạnh tranh</strong><small>Nhiều ưu đãi hấp dẫn</small></span></div>
+      <div><b>⚡</b><span><strong>Tư vấn nhanh</strong><small>Hỗ trợ trực tuyến 24/7</small></span></div>
+      <div><b>🚚</b><span><strong>Giao xe tận nơi</strong><small>Phục vụ toàn quốc</small></span></div>
+    </div>
+  </section>
+
+  <section class="section categories-section" id="categories">
     <div class="container-wide">
-      <h2 class="section-title">Danh mục tư vấn</h2>
-      <p class="section-desc">Chọn chủ đề để bắt đầu hỏi chatbot</p>
+      <div class="section-heading">
+        <div><span class="eyebrow">Chọn xe theo nhu cầu</span><h2 class="section-title">Danh mục xe</h2></div>
+        <a href="#featured" class="text-link">Xem tất cả →</a>
+      </div>
       <div id="categoryGrid" class="category-grid"></div>
+    </div>
+  </section>
+
+  <section class="brands-section">
+    <div class="container-wide">
+      <span class="brands-label">Thương hiệu nổi bật</span>
+      <div id="brandList" class="brand-list"></div>
     </div>
   </section>
 
   <section class="section" id="featured">
     <div class="container-wide">
-      <h2 class="section-title">Xe nổi bật</h2>
+      <div class="section-heading">
+        <div><span class="eyebrow">Được quan tâm nhiều</span><h2 class="section-title">Xe nổi bật</h2></div>
+        <span class="price-note">* Giá hiển thị mang tính tham khảo</span>
+      </div>
       <div id="featuredGrid" class="product-grid"></div>
+    </div>
+  </section>
+
+  <section class="section section-soft" id="electric">
+    <div class="container-wide">
+      <div class="section-heading">
+        <div><span class="eyebrow">Di chuyển xanh</span><h2 class="section-title">Xe điện</h2></div>
+        <a href="#branches" class="text-link">Tìm cửa hàng →</a>
+      </div>
+      <div id="electricGrid" class="product-grid catalogue-grid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="petrol">
+    <div class="container-wide">
+      <div class="section-heading">
+        <div><span class="eyebrow">Đa dạng phong cách</span><h2 class="section-title">Xe máy xăng</h2></div>
+      </div>
+      <div id="petrolGrid" class="product-grid catalogue-grid"></div>
+    </div>
+  </section>
+
+  <section class="section section-soft" id="fifty_cc">
+    <div class="container-wide">
+      <div class="section-heading">
+        <div><span class="eyebrow">Dễ đi, tiết kiệm</span><h2 class="section-title">Xe 50cc cho học sinh</h2></div>
+      </div>
+      <div id="fiftyGrid" class="product-grid catalogue-grid"></div>
     </div>
   </section>
 
   <section class="section section-alt" id="promotions">
     <div class="container-wide">
-      <h2 class="section-title">Khuyến mãi</h2>
+      <div class="section-heading light">
+        <div><span class="eyebrow">Đừng bỏ lỡ</span><h2 class="section-title">Khuyến mãi đang diễn ra</h2></div>
+      </div>
       <div id="promoGrid" class="promo-grid"></div>
     </div>
   </section>
 
   <section class="section" id="services">
     <div class="container-wide">
-      <h2 class="section-title">Dịch vụ khi mua xe</h2>
+      <div class="section-heading">
+        <div><span class="eyebrow">An tâm mua sắm</span><h2 class="section-title">Dịch vụ hỗ trợ trọn gói</h2></div>
+      </div>
+      <div class="service-banner">
+        <img src="/assets/motorcycle-service-category.webp" alt="Kỹ thuật viên kiểm tra và bảo dưỡng xe máy" loading="lazy">
+        <div>
+          <span class="eyebrow">Chăm sóc chuyên nghiệp</span>
+          <h3>An tâm trên mọi hành trình</h3>
+          <p>Đội ngũ kỹ thuật hỗ trợ từ thủ tục mua xe, đăng ký biển số đến bảo dưỡng và vận chuyển tận nơi.</p>
+        </div>
+      </div>
       <div id="serviceGrid" class="service-grid"></div>
     </div>
   </section>
 
-  <section class="section section-alt" id="branches">
+  <section class="section news-section" id="news">
     <div class="container-wide">
-      <h2 class="section-title">Hệ thống chi nhánh</h2>
-      <p class="section-desc">Thời gian làm việc: 7h30 – 20h (Thứ 2 – Chủ nhật)</p>
+      <div class="section-heading">
+        <div><span class="eyebrow">Cập nhật thị trường</span><h2 class="section-title">Tin xe mới nhất</h2></div>
+      </div>
+      <div id="newsGrid" class="news-grid"></div>
+    </div>
+  </section>
+
+  <section class="section branch-section" id="branches">
+    <div class="container-wide">
+      <div class="section-heading">
+        <div><span class="eyebrow">Gần bạn hơn</span><h2 class="section-title">Hệ thống 7 cửa hàng</h2></div>
+        <span class="section-desc">Mở cửa 7h30 – 20h, Thứ 2 – Chủ nhật</span>
+      </div>
       <div id="branchGrid" class="branch-grid"></div>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div class="container-wide footer-inner">
-      <div>
-        <strong>Minh Long Motor</strong>
-        <p>Chatbot tư vấn — dự án motorcycle-advisor-chatbot</p>
+    <div class="container-wide footer-grid">
+      <div class="footer-brand">
+        <strong>MINH LONG MOTOR</strong>
+        <p>Hệ thống xe máy và xe điện chính hãng. Đồng hành cùng khách hàng từ tư vấn đến hậu mãi.</p>
+        <a href="tel:0786000036" class="footer-hotline">0786.000.036</a>
       </div>
       <div>
-        <a href="https://minhlongmoto.com/" target="_blank" rel="noopener">minhlongmoto.com</a>
-        <span> · </span>
-        <a href="/admin.html">Đăng nhập quản trị</a>
+        <strong>Mua sắm</strong>
+        <a href="#electric">Xe điện</a><a href="#petrol">Xe máy</a><a href="#promotions">Khuyến mãi</a>
+      </div>
+      <div>
+        <strong>Hỗ trợ</strong>
+        <a href="#services">Dịch vụ</a><a href="#branches">Cửa hàng</a><a href="#" id="footerOpenChat">Tư vấn AI</a>
+      </div>
+      <div>
+        <strong>Thông tin</strong>
+        <span>7h30 – 20h hằng ngày</span><a href="/admin.html">Quản trị hệ thống</a>
       </div>
     </div>
+    <div class="container-wide footer-bottom">© 2026 Minh Long Motor · Nội dung tham khảo từ hệ thống dữ liệu cửa hàng</div>
   </footer>
 
   <div id="chatWidget" class="chat-widget">

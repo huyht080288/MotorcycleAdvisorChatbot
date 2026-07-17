@@ -13,6 +13,8 @@ from urllib.parse import urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup
 
+from tools.dataref_cleaner import clean_answer
+
 SRC_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = SRC_DIR / "DataRef"
 
@@ -34,8 +36,24 @@ def fetch_html(url: str, timeout: int = 15) -> str:
 def extract_text(element) -> str:
     if element is None:
         return ""
-    for tag in element.find_all(["script", "style", "nav", "footer", "header"]):
+    for tag in element.find_all(
+        ["script", "style", "nav", "footer", "header", "aside", "form"]
+    ):
         tag.decompose()
+    for selector in (
+        ".breadcrumb",
+        ".breadcrumbs",
+        ".rank-math-breadcrumb",
+        ".comments-area",
+        ".comment-list",
+        ".sharedaddy",
+        ".social-share",
+        ".elementor-location-header",
+        ".elementor-location-footer",
+        "#comments",
+    ):
+        for node in element.select(selector):
+            node.decompose()
     text = element.get_text(separator=" ", strip=True)
     return re.sub(r"\s+", " ", text)
 
@@ -47,7 +65,17 @@ def collect_links(base_url: str, soup: BeautifulSoup, same_domain: str) -> list[
         parsed = urlparse(href)
         if parsed.netloc != same_domain:
             continue
-        if any(x in parsed.path for x in ["/tag/", "/author/", "/page/", "#", "javascript:"]):
+        if any(
+            x in parsed.path
+            for x in [
+                "/tag/",
+                "/author/",
+                "/page/",
+                "/comment-page-",
+                "#",
+                "javascript:",
+            ]
+        ):
             continue
         clean = f"{parsed.scheme}://{parsed.netloc}{parsed.path.rstrip('/')}"
         if clean not in links and clean != base_url.rstrip("/"):
@@ -66,11 +94,12 @@ def page_to_entry(url: str, soup: BeautifulSoup) -> dict | None:
     if len(content) < 80:
         return None
 
-    answer = content[:1200]
+    entry_id = slugify(title)[:80]
+    answer = clean_answer(content, entry_id)[:1200]
     question = title if "?" in title else f"Thông tin về {title}"
 
     return {
-        "id": slugify(title)[:80],
+        "id": entry_id,
         "question": question,
         "answer": answer,
         "tags": [w for w in re.findall(r"[A-Za-zÀ-ỹ0-9]{3,}", title)[:5]],
